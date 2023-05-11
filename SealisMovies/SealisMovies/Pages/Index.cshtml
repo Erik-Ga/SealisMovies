@@ -1,10 +1,106 @@
 ﻿@page
 @model IndexModel
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 @{
     ViewData["Title"] = "Home page";
+    var user = await UserManager.GetUserAsync(User);
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome To Sealis</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <p>Här kan du diskutera allt om filmer!🎥🎞️</p>
 </div>
+
+<div class="row">
+    @if(Model.Discussions != null)
+    {
+        //Om man klickar in på ett specifikt inlägg
+        @if(Model.Discussion != null)
+        {
+            <div class="card m-2" style="width: 18rem">
+                <img class="card-img-top" src="~/img/@Model.Discussion.Image">
+                <div class="card-body">
+                    <h5 class="card-title">@Model.Discussion.Header</h5>
+                    <p class="card-text">@Model.Discussion.Text</p>
+                    @if (user != null && user.Id == @Model.Discussion.UserId)
+                    {
+                        <a asp-route-deleteid="@Model.Discussion.Id" class="btn btn-danger">Ta bort</a>
+                    }
+                </div>
+                <p class="card-footer">@Model.Discussion.Date</p>
+            </div>
+            
+            //Kommentera inlägget
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <h1 class="text-center">Kommentera inlägget</h1>
+
+                <form method="post" enctype="multipart/form-data">
+
+                    <label asp-for="Discussion.Header" class="form-label"></label>
+                    <input asp-for="Discussion.Header" class="form-control" />
+
+                    <label asp-for="Discussion.Text" class="form-label"></label>
+                    <textarea asp-for="Discussion.Text" class="form-control" cols="40" rows="5"></textarea>
+
+                    <label asp-for="Discussion.Image" class="form-label"></label>
+                    <input type="file" class="form-control" name="UploadedImage">
+
+                    <br>
+
+                    <input type="submit" class="btn btn-success" value="Spara Diskussion💾">
+
+                </form>
+            }
+        }
+        //Annars visas alla inlägg
+        else
+        {
+            @foreach (var discussion in Model.Discussions)
+            {
+                <div class="card m-2" style="width: 18rem">
+                    <a asp-route-showid="@discussion.Id"><img class="card-img-top" src="~/img/@discussion.Image"></a>
+                    <div class="card-body">
+                        <h5 class="card-title">@discussion.Header</h5>
+                        <p class="card-text">@discussion.Text</p>
+                        @if (user != null && user.Id == discussion.UserId)
+                        {
+                            <a asp-route-deleteid="@discussion.Id" class="btn btn-danger">Ta bort</a>
+                        }
+                        <a asp-route-deleteid="@discussion.Id" class="btn btn-warning">Kommentera inlägg</a>
+                    </div>
+                    <p class="card-footer">@discussion.Date</p>
+                </div>
+            }
+        }
+    }
+</div>
+
+@if(SignInManager.IsSignedIn(User))
+{
+    <br />
+    <h1 class="text-center">Du är inloggad som @User.Identity.Name - Välkommen!♡</h1>
+    <br />
+    <h3>Skapa ett nytt inlägg här!</h3>
+    <form method="post" enctype="multipart/form-data">
+    
+        <label asp-for="Discussion.Header" class="form-label"></label>
+        <input asp-for="Discussion.Header" class="form-control"/>
+
+        <label asp-for="Discussion.Text" class="form-label"></label>
+        <textarea asp-for="Discussion.Text" class="form-control" cols="40" rows="5"></textarea>
+
+        <label asp-for="Discussion.Image" class="form-label"></label>
+        <input type="file" class="form-control" name="UploadedImage">
+        
+        <br>
+
+        <input type="submit" class="btn btn-success" value="Spara Diskussion💾">
+    
+    </form>
+}
+else
+{
+    <div class="alert alert-danger">Du är INTE inloggad!💔</div>
+}

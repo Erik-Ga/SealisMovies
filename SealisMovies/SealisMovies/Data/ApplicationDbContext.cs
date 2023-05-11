@@ -8,6 +8,8 @@ namespace SealisMovies.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+
         }
+        public DbSet<Models.Discussion> Discussions { get; set;}
     }
 }

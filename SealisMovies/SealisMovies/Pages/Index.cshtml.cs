@@ -1,20 +1,76 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using SealisMovies.Models;
+using System.Reflection.Metadata;
+using System.Security.Claims;
 
 namespace SealisMovies.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
-
-        public IndexModel(ILogger<IndexModel> logger)
+        private readonly Data.ApplicationDbContext _context;
+        public IndexModel(Data.ApplicationDbContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
-        public void OnGet()
-        {
+        public List<Models.Discussion> Discussions { get; set; }
 
+
+        [BindProperty]
+        public Models.Discussion Discussion { get; set; }
+        
+        [BindProperty]
+        public IFormFile UploadedImage { get; set; }
+
+        public async Task<IActionResult> OnGetAsync(int showid, int deleteid)
+        {
+            if (showid != 0)
+            {
+                Discussion = await _context.Discussions.FindAsync(showid);
+            }
+            Models.Discussion discussion = await _context.Discussions.FindAsync(deleteid);
+            if (deleteid != 0)
+            {
+                if(discussion != null) 
+                {
+                    if (System.IO.File.Exists("./wwwroot/img/" + discussion.Image))
+                    {
+                        System.IO.File.Delete("./wwwroot/img/" + discussion.Image);
+                    }
+                    _context.Discussions.Remove(discussion);
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToPage("./Index");
+                }
+            }
+            Discussions = await _context.Discussions.ToListAsync();
+            return Page();
+        }
+        public async Task<IActionResult> OnPostAsync()
+        {
+            string fileName = string.Empty;
+            if(UploadedImage != null)
+            {
+                Random rnd = new();
+                fileName = rnd.Next(0, 10000).ToString() + UploadedImage.FileName;
+                var file = "./wwwroot/img/" + fileName;
+               
+                using (var fileStream = new FileStream(file, FileMode.Create))
+                {
+                    await UploadedImage.CopyToAsync(fileStream);
+                }
+            }
+            Discussion.Date = DateTime.Now;
+            Discussion.Image = fileName;
+            Discussion.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            _context.Add(Discussion);
+            await _context.SaveChangesAsync();
+
+
+            return RedirectToPage("./Index");
         }
     }
 }
