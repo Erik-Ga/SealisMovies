@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using SealisMovies.Models;
@@ -17,15 +18,22 @@ namespace SealisMovies.Pages
 
         public List<Models.Discussion> Discussions { get; set; }
 
-
         [BindProperty]
         public Models.Discussion Discussion { get; set; }
+
+        [BindProperty]
+        public Models.Message Message { get; set; }
         
         [BindProperty]
         public IFormFile UploadedImage { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int showid, int deleteid)
+        public async Task<IActionResult> OnGetAsync(int showid, int deleteid, string messageid)
         {
+            //Fråga Micke (Handlar om skicka privat meddelande)
+            /*if(messageid != null)
+            {
+                Message.Reciever = messageid;
+            }*/
             if (showid != 0)
             {
                 Discussion = await _context.Discussions.FindAsync(showid);
@@ -65,6 +73,7 @@ namespace SealisMovies.Pages
             Discussion.Date = DateTime.Now;
             Discussion.Image = fileName;
             Discussion.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Discussion.UserName = User.Identity.Name;
 
             _context.Add(Discussion);
             await _context.SaveChangesAsync();
