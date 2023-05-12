@@ -12,8 +12,8 @@ using SealisMovies.Data;
 namespace SealisMovies.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230512133749_categorytable")]
-    partial class categorytable
+    [Migration("20230512155725_testfixtwo")]
+    partial class testfixtwo
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
