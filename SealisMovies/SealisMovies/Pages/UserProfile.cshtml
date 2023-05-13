@@ -1,0 +1,42 @@
+﻿@page
+@model SealisMovies.Pages.UserProfileModel
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@{
+    var user = await UserManager.GetUserAsync(User);
+}
+
+<h3>Lägg till en profilbild!</h3>
+<form method="post" enctype="multipart/form-data">
+
+    <label asp-for="ProfilePicture.Image" class="form-label"></label>
+    <input type="file" class="form-control" name="UploadedImage">
+
+    <br>
+
+    <input type="submit" class="btn btn-success" value="Spara profilbild💾">
+
+</form>
+
+<!-- Display profile pictures -->
+@if (Model.UserProfilePictures != null && Model.UserProfilePictures.Any())
+{
+    <h4>Current Profile Pictures:</h4>
+    <ul>
+        @foreach (var picture in Model.UserProfilePictures)
+        {
+            <li>
+                <img src="~/img/@picture.Image" alt="Profile Picture">
+                <form method="post" asp-page-handler="DeletePicture" asp-route-id="@picture.Id">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+                <form method="post" enctype="multipart/form-data" asp-page-handler="UpdatePicture" asp-route-id="@picture.Id">
+                    <label asp-for="@Model.ProfilePicture.Image" class="form-label"></label>
+                    <input type="file" class="form-control" name="UploadedImage">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+            </li>
+        }
+    </ul>
+}

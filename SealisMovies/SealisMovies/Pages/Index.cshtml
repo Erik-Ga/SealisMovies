@@ -43,7 +43,9 @@
                             <a asp-route-deleteid="@Model.Discussion.Id" class="btn btn-danger">Ta bort</a>
                         }
                     </div>
-                    <p class="card-footer">@Model.Discussion.Date</p>
+                    <p class="card-footer">@Model.Discussion.Date <img src="~/img/@Model.Discussion.ProfilePicture" alt="Profile Picture" width="50" height="50" /></p>
+                    
+
                 </div>
 
 
@@ -87,7 +89,8 @@
                                 <a asp-route-deleteid="@discussion.Id" class="btn btn-danger">Ta bort</a>
                             }
                         </div>
-                        <p class="card-footer">@discussion.Date <a asp-route-messageid="@discussion.UserName.ToString()" class="btn btn-warning">@discussion.UserName</a></p>
+                        <p class="card-footer">@discussion.Date <a asp-route-messageid="@discussion.UserName.ToString()" class="btn btn-warning">@discussion.UserName</a> <img src="~/img/@discussion.ProfilePicture" alt="Profile Picture" width="50" height="50" /></p>
+                        
                     </div>
                 }
                 <p></p>
@@ -129,7 +132,7 @@ else
                     <a asp-route-deleteid="@Model.Discussion.Id" class="btn btn-danger">Ta bort</a>
                 }
             </div>
-            <p class="card-footer">@Model.Discussion.Date</p>
+            <p class="card-footer">@Model.Discussion.Date <img src="~/img/@Model.Discussion.ProfilePicture" alt="Profile Picture" width="50" height="50" /></p>
         </div>
     }
     else
@@ -148,7 +151,8 @@ else
                             <a asp-route-deleteid="@discussion.Id" class="btn btn-danger">Ta bort</a>
                         }
                     </div>
-                    <p class="card-footer">@discussion.Date</p>
+                    <p class="card-footer">@discussion.Date <img src="~/img/@discussion.ProfilePicture" alt="Profile Picture" width="50" height="50" /></p>
+                    
                 </div>
             }
         </div>

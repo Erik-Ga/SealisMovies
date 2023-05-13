@@ -11,11 +11,14 @@ namespace SealisMovies.Pages
     public class IndexModel : PageModel
     {
         private readonly Data.ApplicationDbContext _context;
-        public IndexModel(Data.ApplicationDbContext context)
+        private readonly UserManager<IdentityUser> _userManager;
+
+        public IndexModel(Data.ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
-
+        public List<ProfilePicture> ProfilePictures { get; set; }
         public List<Models.Discussion> Discussions { get; set; }
 
         [BindProperty]
@@ -34,6 +37,9 @@ namespace SealisMovies.Pages
             {
                 Message.Reciever = messageid;
             }*/
+
+            ProfilePictures = await _context.ProfilePicture.ToListAsync();
+
             if (showid != 0)
             {
                 Discussion = await _context.Discussions.FindAsync(showid);
@@ -58,6 +64,15 @@ namespace SealisMovies.Pages
         }
         public async Task<IActionResult> OnPostAsync()
         {
+            var currentUser = await _userManager.GetUserAsync(User);
+            var profilePicture = await _context.ProfilePicture.FirstOrDefaultAsync(p => p.UserId == currentUser.Id);
+
+            if (profilePicture != null)
+            {
+                // Set Discussion.ProfilePicture to the matching ProfilePicture.Image
+                Discussion.ProfilePicture = profilePicture.Image;
+            }
+
             string fileName = string.Empty;
             if(UploadedImage != null)
             {
