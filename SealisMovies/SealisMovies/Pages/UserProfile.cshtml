@@ -8,23 +8,25 @@
 }
 
 @*//Här kan användaren ladda upp en profilbild som sparas till databasen kopplat till inloggad användares id*@
-<h3>Lägg till en profilbild!</h3>
-<form method="post" enctype="multipart/form-data">
+@if (!Model.UserProfilePictures.Any(p => p.UserId == "bdaebc49-ef46-40cc-b578-0ad6bed05094"))
+{
+    <h3>Lägg till en profilbild!</h3>
+    <form method="post" enctype="multipart/form-data">
 
-    <label asp-for="ProfilePicture.Image" class="form-label"></label>
-    <input type="file" class="form-control" name="UploadedImage">
+        <label asp-for="ProfilePicture.Image" class="form-label"></label>
+        <input type="file" class="form-control" name="UploadedImage">
 
-    <br>
+        <br>
 
-    <input type="submit" class="btn btn-success" value="Spara profilbild💾">
+        <input type="submit" class="btn btn-success" value="Spara profilbild💾">
 
-</form>
-
+    </form>
+}
 @*//Här visas nuvarande profilbild som användaren kan ta bort eller uppdatara genom att ladda upp och erstätta med ny profilbild*@
 @if (Model.UserProfilePictures != null && Model.UserProfilePictures.Any())
 {
-    <h4>Current Profile Pictures:</h4>
-    <ul>
+    <h4>Nuvarande profilbild:</h4>
+    <ul style="list-style-type: none;">
         @foreach (var picture in Model.UserProfilePictures)
         {
             <li>
