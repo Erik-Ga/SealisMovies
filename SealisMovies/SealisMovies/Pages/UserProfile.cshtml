@@ -7,6 +7,7 @@
     var user = await UserManager.GetUserAsync(User);
 }
 
+@*//Här kan användaren ladda upp en profilbild som sparas till databasen kopplat till inloggad användares id*@
 <h3>Lägg till en profilbild!</h3>
 <form method="post" enctype="multipart/form-data">
 
@@ -19,7 +20,7 @@
 
 </form>
 
-<!-- Display profile pictures -->
+@*//Här visas nuvarande profilbild som användaren kan ta bort eller uppdatara genom att ladda upp och erstätta med ny profilbild*@
 @if (Model.UserProfilePictures != null && Model.UserProfilePictures.Any())
 {
     <h4>Current Profile Pictures:</h4>

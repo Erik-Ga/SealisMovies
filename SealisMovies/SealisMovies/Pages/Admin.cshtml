@@ -7,7 +7,7 @@
 @{
 }
 
-
+@*//Här kan admin skapa kategorier*@
 <form method="post" enctype="multipart/form-data">
 
     <div class="form-group">
@@ -23,6 +23,7 @@
 
 <hr />
 
+@*//Här listas alla kategorier som sedan admin kan ta bort eller ändra på*@
 <h2>Categories</h2>
 <ul>
     @foreach (var category in Model.Categories)
