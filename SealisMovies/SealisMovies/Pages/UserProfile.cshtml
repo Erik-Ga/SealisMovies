@@ -30,7 +30,7 @@
         @foreach (var picture in Model.UserProfilePictures)
         {
             <li>
-                <img src="~/img/@picture.Image" alt="Profile Picture">
+                <img src="~/img/@picture.Image" alt="Profile Picture" width="250" height="250">
                 <form method="post" asp-page-handler="DeletePicture" asp-route-id="@picture.Id">
                     <button type="submit" class="btn btn-danger">Delete</button>
                 </form>
