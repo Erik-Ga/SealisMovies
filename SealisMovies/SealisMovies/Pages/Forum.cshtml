@@ -1,4 +1,157 @@
 ﻿@page
-@model SealisMovies.Pages.ForumModel
+@model ForumModel
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 @{
+    ViewData["Title"] = "Forum Page";
+    var user = await UserManager.GetUserAsync(User);
+}
+
+<div class="text-center">
+    <h1 class="display-4">Forum</h1>
+    <p>Här kan du kika och kommentera på intressant inlägg om olika kategories!🎥🎞️</p>
+</div>
+
+@*//Det som syns när man är inloggad*@
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="row">
+        @if (Model.Discussions != null)
+        {
+            @*Fråga Micke! (Handlar om skcika privat meddelane)//När något inte är null ska privatmeddelandesida synas
+    @if(Model.Message != null)
+    {
+    <h1>Helloooooo pls work</h1>
+    }*@
+
+
+            //Om man klickar in på ett specifikt inlägg
+            @if (Model.Discussion != null)
+            {
+                <div class="card m-2" style="width: 18rem">
+                    <img class="card-img-top" src="~/img/@Model.Discussion.Image">
+                    <div class="card-body">
+                        <h5 class="card-title">@Model.Discussion.Header</h5>
+                        <p class="card-text">@Model.Discussion.Text</p>
+                        @if (user != null && user.Id == @Model.Discussion.UserId || user.UserName == "sealis@hotmail.com")
+                        {
+                            <a asp-route-deleteid="@Model.Discussion.Id" class="btn btn-danger">Ta bort</a>
+                        }
+                    </div>
+                    <p class="card-footer">@Model.Discussion.Date </p>
+                    <p>@Model.Discussion.UserName <img src="~/img/@Model.Discussion.ProfilePicture" alt="Profile Picture" width="50" height="50" /></p>
+
+
+                </div>
+
+
+                        //Kommentera inlägget
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <p></p>
+                    <p></p>
+                    <h1 class="text-center">Kommentera inlägget</h1>
+
+                    <form method="post" enctype="multipart/form-data">
+
+                        <label asp-for="Discussion.Header" class="form-label"></label>
+                        <input asp-for="Discussion.Header" class="form-control" />
+
+                        <label asp-for="Discussion.Text" class="form-label"></label>
+                        <textarea asp-for="Discussion.Text" class="form-control" cols="40" rows="5"></textarea>
+
+                        <label asp-for="Discussion.Image" class="form-label"></label>
+                        <input type="file" class="form-control" name="UploadedImage">
+
+                        <br>
+
+                        <input type="submit" class="btn btn-success" value="Spara Diskussion💾">
+
+                    </form>
+                }
+            }
+            //Annars visas alla inlägg
+            else
+            {
+                @foreach (var discussion in Model.Discussions)
+                {
+                    <div class="card m-2 p-2" style="width: 18rem">
+                        <a asp-route-showid="@discussion.Id"><img class="card-img-top" src="~/img/@discussion.Image"></a>
+                        <div class="card-body">
+                            <h5 class="card-title">@discussion.Header</h5>
+                            <p class="card-text">@discussion.Text</p>
+                            @if (user != null && user.Id == discussion.UserId || user.UserName == "sealis@hotmail.com")
+                            {
+                                <a asp-route-deleteid="@discussion.Id" class="btn btn-danger">Ta bort</a>
+                            }
+                        </div>
+                        <p class="card-footer">@discussion.Date <a asp-route-messageid="@discussion.UserName.ToString()" class="btn btn-warning">@discussion.UserName</a> <img src="~/img/@discussion.ProfilePicture" alt="Profile Picture" width="50" height="50" /></p>
+
+                    </div>
+                }
+                <p></p>
+                <p></p>
+
+                <h3>Skapa ett nytt inlägg här!</h3>
+                <form method="post" enctype="multipart/form-data">
+
+                    <label asp-for="Discussion.Header" class="form-label"></label>
+                    <input asp-for="Discussion.Header" class="form-control" />
+
+                    <label asp-for="Discussion.Text" class="form-label"></label>
+                    <textarea asp-for="Discussion.Text" class="form-control" cols="40" rows="5"></textarea>
+
+                    <label asp-for="Discussion.Image" class="form-label"></label>
+                    <input type="file" class="form-control" name="UploadedImage">
+
+                    <br>
+
+                    <input type="submit" class="btn btn-success" value="Spara Diskussion💾">
+
+                </form>
+            }
+        }
+    </div>
+}
+//Det som syns om man INTE är inloggad
+else
+{
+    @if (Model.Discussion != null)
+    {
+        <div class="card m-2" style="width: 18rem">
+            <img class="card-img-top" src="~/img/@Model.Discussion.Image">
+            <div class="card-body">
+                <h5 class="card-title">@Model.Discussion.Header</h5>
+                <p class="card-text">@Model.Discussion.Text</p>
+                @if (user != null && user.Id == @Model.Discussion.UserId)
+                {
+                    <a asp-route-deleteid="@Model.Discussion.Id" class="btn btn-danger">Ta bort</a>
+                }
+            </div>
+            <p class="card-footer">@Model.Discussion.Date <img src="~/img/@Model.Discussion.ProfilePicture" alt="Profile Picture" width="50" height="50" /></p>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-danger">Du är INTE inloggad!💔</div>
+        <div class="row">
+            @foreach (var discussion in Model.Discussions)
+            {
+                <div class="card m-2 p-2" style="width: 18rem">
+                    <a asp-route-showid="@discussion.Id"><img class="card-img-top" src="~/img/@discussion.Image"></a>
+                    <div class="card-body">
+                        <h5 class="card-title">@discussion.Header</h5>
+                        <p class="card-text">@discussion.Text</p>
+                        @if (user != null && user.Id == discussion.UserId)
+                        {
+                            <a asp-route-deleteid="@discussion.Id" class="btn btn-danger">Ta bort</a>
+                        }
+                    </div>
+                    <p class="card-footer">@discussion.Date <img src="~/img/@discussion.ProfilePicture" alt="Profile Picture" width="50" height="50" /></p>
+
+                </div>
+            }
+        </div>
+    }
+
 }
