@@ -51,6 +51,12 @@
                                 <a class="nav-link text-dark" asp-area="" asp-page="/UserProfile">User Profile</a>
                             </li>
                         }
+                        @if (user != null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Inbox">Inbox</a>
+                            </li>
+                        }
 
                     </ul>
                     <partial name="_LoginPartial" />
