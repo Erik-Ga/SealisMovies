@@ -15,23 +15,44 @@
 @*//Det som syns när man är inloggad*@
 @if (SignInManager.IsSignedIn(User))
 {
+    if (Model.Message == null)
+    {
+        <br />
+        <h1 class="text-center">Du är inloggad som @User.Identity.Name - Välkommen!♡</h1>
+        <br />
+    }
 
-    <br />
-    <h1 class="text-center">Du är inloggad som @User.Identity.Name - Välkommen!♡</h1>
-    <br />
-
-    <div class="row">
+    <div class="row justify-content-center">
         @if (Model.Discussions != null)
         {
-            @*Fråga Micke! (Handlar om skcika privat meddelane)//När något inte är null ska privatmeddelandesida synas
-            @if(Model.Message != null)
+            //Det som syns när man vill skicka privat meddelande till en användare
+            @if (Model.Message != null && Model.Message.Reciever == User.Identity.Name)
             {
-                <h1>Helloooooo pls work</h1>
-            }*@
+                <p class="alert alert-danger">Du kan inte skriva till dig själv!</p>
 
+                @foreach (var discussion in Model.Discussions)
+                {
+                    <div class="card m-2 p-2" style="width: 18rem">
+                        <a asp-route-showid="@discussion.Id"><img class="card-img-top" src="~/img/@discussion.Image"></a>
+                        <div class="card-body">
+                            <h5 class="card-title">@discussion.Header</h5>
+                            <p class="card-text">@discussion.Text</p>
+                            @if (user != null && user.Id == discussion.UserId || user.UserName == "sealis@hotmail.com")
+                            {
+                                <a asp-route-deleteid="@discussion.Id" class="btn btn-danger">Ta bort</a>
+                            }
+                        </div>
+                        <p class="card-footer">@discussion.Date <a asp-route-messageid="@discussion.UserName.ToString()" class="btn btn-warning">@discussion.UserName</a> <img src="~/img/@discussion.ProfilePicture" alt="Profile Picture" width="50" height="50" /></p>
 
+                    </div>
+                }
+            }
+            else if (Model.Message != null)
+            {
+                <h1>Du (@Model.Message.UserId) vill skriva till @Model.Message.Reciever</h1>
+            }
             //Om man klickar in på ett specifikt inlägg
-            @if (Model.Discussion != null)
+            else if (Model.Discussion != null)
             {
                 <div class="card m-2" style="width: 18rem">
                     <img class="card-img-top" src="~/img/@Model.Discussion.Image">
@@ -45,12 +66,12 @@
                     </div>
                     <p class="card-footer">@Model.Discussion.Date </p>
                     <p>@Model.Discussion.UserName <img src="~/img/@Model.Discussion.ProfilePicture" alt="Profile Picture" width="50" height="50" /></p>
-                    
+
 
                 </div>
 
 
-                //Kommentera inlägget
+                        //Kommentera inlägget
                 @if (SignInManager.IsSignedIn(User))
                 {
                     <p></p>
@@ -91,9 +112,10 @@
                             }
                         </div>
                         <p class="card-footer">@discussion.Date <a asp-route-messageid="@discussion.UserName.ToString()" class="btn btn-warning">@discussion.UserName</a> <img src="~/img/@discussion.ProfilePicture" alt="Profile Picture" width="50" height="50" /></p>
-                        
+
                     </div>
                 }
+
             }
         }
     </div>
@@ -103,6 +125,7 @@ else
 {
     @if (Model.Discussion != null)
     {
+        <div class="alert alert-danger">Du är INTE inloggad!💔</div>
         <div class="card m-2" style="width: 18rem">
             <img class="card-img-top" src="~/img/@Model.Discussion.Image">
             <div class="card-body">
@@ -133,7 +156,7 @@ else
                         }
                     </div>
                     <p class="card-footer">@discussion.Date <img src="~/img/@discussion.ProfilePicture" alt="Profile Picture" width="50" height="50" /></p>
-                    
+
                 </div>
             }
         </div>

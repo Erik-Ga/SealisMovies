@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using SealisMovies.Data.Migrations;
 using SealisMovies.Models;
 using System.Reflection.Metadata;
 using System.Security.Claims;
@@ -26,17 +27,20 @@ namespace SealisMovies.Pages
 
         [BindProperty]
         public Models.Message Message { get; set; }
-        
+
         [BindProperty]
         public IFormFile UploadedImage { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int showid, int deleteid, string messageid)
         {
-            //Fråga Micke (Handlar om skicka privat meddelande)
-            /*if(messageid != null)
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (messageid != null)
             {
+                Message = new Models.Message();
+
+                Message.UserId = currentUser.UserName;
                 Message.Reciever = messageid;
-            }*/
+            }
 
             ProfilePictures = await _context.ProfilePicture.ToListAsync();
 
@@ -44,6 +48,7 @@ namespace SealisMovies.Pages
             {
                 Discussion = await _context.Discussions.FindAsync(showid);
             }
+
             Models.Discussion discussion = await _context.Discussions.FindAsync(deleteid);
             if (deleteid != 0)
             {
