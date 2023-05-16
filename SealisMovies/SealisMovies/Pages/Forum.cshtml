@@ -18,15 +18,51 @@
     <div class="row">
         @if (Model.Discussions != null)
         {
-            @*Fråga Micke! (Handlar om skcika privat meddelane)//När något inte är null ska privatmeddelandesida synas
-    @if(Model.Message != null)
-    {
-    <h1>Helloooooo pls work</h1>
-    }*@
+            //Meddelande
+            //En alert berättar att man inte kan skicka meddelande till sig själv
+            @if (Model.Message != null && Model.Message.Reciever == User.Identity.Name)
+            {
+                <p class="alert alert-danger">Du kan inte skriva till dig själv!</p>
 
+                @foreach (var discussion in Model.Discussions)
+                {
+                    <div class="card m-2 p-2" style="width: 18rem">
+                        <a asp-route-showid="@discussion.Id"><img class="card-img-top" src="~/img/@discussion.Image"></a>
+                        <div class="card-body">
+                            <h5 class="card-title">@discussion.Header</h5>
+                            <p class="card-text">@discussion.Text</p>
+                            @if (user != null && user.Id == discussion.UserId || user.UserName == "sealis@hotmail.com")
+                            {
+                                <a asp-route-deleteid="@discussion.Id" class="btn btn-danger">Ta bort</a>
+                            }
+                        </div>
+                        <p class="card-footer">@discussion.Date <a asp-route-messageid="@discussion.UserName.ToString()" class="btn btn-warning">@discussion.UserName</a> <img src="~/img/@discussion.ProfilePicture" alt="Profile Picture" width="50" height="50" /></p>
 
+                    </div>
+                }
+            }
+            //Det som syns när man vill skicka meddelande till en användare
+            else if (Model.Message != null)
+            {
+                <h3>Från: @Model.Message.UserId</h3>
+                <h3>Till: @Model.Message.Reciever</h3>
+
+                <form method="post" enctype="multipart/form-data">
+
+                    <label asp-for="Message.Title" class="form-label"></label>
+                    <input asp-for="Message.Title" class="form-control" />
+
+                    <label asp-for="Message.Text" class="form-label"></label>
+                    <textarea asp-for="Message.Text" class="form-control" cols="40" rows="5"></textarea>
+
+                    <br>
+
+                    <input type="submit" class="btn btn-success" value="Skicka✉️">
+
+                </form>
+            }
             //Om man klickar in på ett specifikt inlägg
-            @if (Model.Discussion != null)
+            else if (Model.Discussion != null)
             {
                 <div class="card m-2" style="width: 18rem">
                     <img class="card-img-top" src="~/img/@Model.Discussion.Image">
@@ -73,27 +109,8 @@
             //Annars visas alla inlägg
             else
             {
-                @foreach (var discussion in Model.Discussions)
-                {
-                    <div class="card m-2 p-2" style="width: 18rem">
-                        <a asp-route-showid="@discussion.Id"><img class="card-img-top" src="~/img/@discussion.Image"></a>
-                        <div class="card-body">
-                            <h5 class="card-title">@discussion.Header</h5>
-                            <p class="card-text">@discussion.Text</p>
-                            @if (user != null && user.Id == discussion.UserId || user.UserName == "sealis@hotmail.com")
-                            {
-                                <a asp-route-deleteid="@discussion.Id" class="btn btn-danger">Ta bort</a>
-                            }
-                        </div>
-                        <p class="card-footer">@discussion.Date <a asp-route-messageid="@discussion.UserName.ToString()" class="btn btn-warning">@discussion.UserName</a> <img src="~/img/@discussion.ProfilePicture" alt="Profile Picture" width="50" height="50" /></p>
-
-                    </div>
-                }
-                <p></p>
-                <p></p>
-
                 <h3>Skapa ett nytt inlägg här!</h3>
-                <form method="post" enctype="multipart/form-data">
+                <form class="mb-5" method="post" enctype="multipart/form-data">
 
                     <label asp-for="Discussion.Header" class="form-label"></label>
                     <input asp-for="Discussion.Header" class="form-control" />
@@ -109,6 +126,24 @@
                     <input type="submit" class="btn btn-success" value="Spara Diskussion💾">
 
                 </form>
+
+                @foreach (var discussion in Model.Discussions)
+                {
+                    <div class="card m-2 p-2" style="width: 18rem">
+                        <a asp-route-showid="@discussion.Id"><img class="card-img-top" src="~/img/@discussion.Image"></a>
+                        <div class="card-body">
+                            <h5 class="card-title">@discussion.Header</h5>
+                            <p class="card-text">@discussion.Text</p>
+                            @if (user != null && user.Id == discussion.UserId || user.UserName == "sealis@hotmail.com")
+                            {
+                                <a asp-route-deleteid="@discussion.Id" class="btn btn-danger">Ta bort</a>
+                            }
+                        </div>
+                        <p class="card-footer">@discussion.Date <a asp-route-recieverid="@discussion.UserName.ToString()" class="btn btn-warning">@discussion.UserName</a> <img src="~/img/@discussion.ProfilePicture" alt="Profile Picture" width="50" height="50" /></p>
+
+                    </div>
+                }
+
             }
         }
     </div>

@@ -31,15 +31,16 @@ namespace SealisMovies.Pages
         [BindProperty]
         public IFormFile UploadedImage { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int showid, int deleteid, string messageid)
+        public async Task<IActionResult> OnGetAsync(int showid, int deleteid, string recieverid)
         {
             var currentUser = await _userManager.GetUserAsync(User);
-            if (messageid != null)
+            if (recieverid != null)
             {
                 Message = new Models.Message();
 
+                //Här används UserName som UserId, men bara för utseendets skull, annasr blir det hela id-strängen och det är fult :)
                 Message.UserId = currentUser.UserName;
-                Message.Reciever = messageid;
+                Message.Reciever = recieverid;
             }
 
             ProfilePictures = await _context.ProfilePicture.ToListAsync();
@@ -67,35 +68,16 @@ namespace SealisMovies.Pages
             Discussions = await _context.Discussions.ToListAsync();
             return Page();
         }
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(string recieverid)
         {
             var currentUser = await _userManager.GetUserAsync(User);
-            var profilePicture = await _context.ProfilePicture.FirstOrDefaultAsync(p => p.UserId == currentUser.Id);
 
-            if (profilePicture != null)
-            {
-                // Set Discussion.ProfilePicture to the matching ProfilePicture.Image
-                Discussion.ProfilePicture = profilePicture.Image;
-            }
+            //Här blir UserId "korrekta" strängen via FK-kopplingen
+            Message.UserId = currentUser.Id;
+            Message.Reciever = recieverid;
+            Message.Sent= true; 
 
-            string fileName = string.Empty;
-            if(UploadedImage != null)
-            {
-                Random rnd = new();
-                fileName = rnd.Next(0, 10000).ToString() + UploadedImage.FileName;
-                var file = "./wwwroot/img/" + fileName;
-               
-                using (var fileStream = new FileStream(file, FileMode.Create))
-                {
-                    await UploadedImage.CopyToAsync(fileStream);
-                }
-            }
-            Discussion.Date = DateTime.Now;
-            Discussion.Image = fileName;
-            Discussion.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            Discussion.UserName = User.Identity.Name;
-
-            _context.Add(Discussion);
+            _context.Add(Message);
             await _context.SaveChangesAsync();
 
 

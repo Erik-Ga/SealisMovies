@@ -30,13 +30,19 @@ namespace SealisMovies.Pages
         [BindProperty]
         public IFormFile UploadedImage { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int showid, int deleteid, string messageid)
+        public async Task<IActionResult> OnGetAsync(int showid, int deleteid, string recieverid)
         {
-            //Fråga Micke (Handlar om skicka privat meddelande)
-            /*if(messageid != null)
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (recieverid != null)
             {
-                Message.Reciever = messageid;
-            }*/
+                Message = new Models.Message();
+
+                Message.UserId = currentUser.UserName;
+                Message.Reciever = recieverid;
+
+
+
+            }
 
             ProfilePictures = await _context.ProfilePicture.ToListAsync();
 
