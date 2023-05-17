@@ -1,9 +1,44 @@
 ﻿@page
 @model SealisMovies.Pages.InboxModel
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 @{
+    var user = await UserManager.GetUserAsync(User);
 }
 
 <div class="text-center">
     <h1 class="display-4">Inbox</h1>
     <p>Inbox för privata koversationer!🎥🎞️</p>
 </div>
+@if (Model.Messages != null)
+{
+    <div>
+        @foreach (var message in Model.Messages)
+        {
+            if (user.UserName == message.ReceiverName)
+            {
+                <p>Titel: @message.Title</p>
+                <p>Text: @message.Text</p>
+                <p class="card-footer"><a asp-route-recieverid="@message.SenderId" class="btn btn-warning">Svara</a></p>
+            }
+        }
+    </div>
+}
+@if(Model.Message != null)
+{
+    <form method="post" enctype="multipart/form-data">
+
+        <label asp-for="Message.Title" class="form-label"></label>
+        <input asp-for="Message.Title" class="form-control" />
+
+        <label asp-for="Message.Text" class="form-label"></label>
+        <textarea asp-for="Message.Text" class="form-control" cols="40" rows="5"></textarea>
+
+        <br>
+
+        <input type="submit" class="btn btn-success" value="Skicka✉️">
+
+    </form>
+}
+
+

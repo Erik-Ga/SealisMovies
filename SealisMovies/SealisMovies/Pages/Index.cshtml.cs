@@ -21,6 +21,7 @@ namespace SealisMovies.Pages
         }
         public List<ProfilePicture> ProfilePictures { get; set; }
         public List<Models.Discussion> Discussions { get; set; }
+        public List<Models.Message> Messages { get; set; }
 
         [BindProperty]
         public Models.Discussion Discussion { get; set; }
@@ -31,18 +32,18 @@ namespace SealisMovies.Pages
         [BindProperty]
         public IFormFile UploadedImage { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int showid, int deleteid, string recieverid)
+        public async Task<IActionResult> OnGetAsync(int showid, int deleteid, string recieverid, string recievername)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (recieverid != null)
             {
                 Message = new Models.Message();
 
-                //Här används UserName som UserId, men bara för utseendets skull, annasr blir det hela id-strängen och det är fult :)
-                Message.UserId = currentUser.UserName;
-                Message.Reciever = recieverid;
+                Message.SenderName = currentUser.UserName;
+                Message.ReceiverName = recievername;
+                Message.RecieverId = recieverid;
             }
-
+            Messages = await _context.Message.ToListAsync();
             ProfilePictures = await _context.ProfilePicture.ToListAsync();
 
             if (showid != 0)
@@ -68,14 +69,15 @@ namespace SealisMovies.Pages
             Discussions = await _context.Discussions.ToListAsync();
             return Page();
         }
-        public async Task<IActionResult> OnPostAsync(string recieverid)
+        public async Task<IActionResult> OnPostAsync(string recieverid, string recievername)
         {
             var currentUser = await _userManager.GetUserAsync(User);
 
-            //Här blir UserId "korrekta" strängen via FK-kopplingen
-            Message.UserId = currentUser.Id;
-            Message.Reciever = recieverid;
-            Message.Sent= true; 
+            Message.SenderId = currentUser.Id;
+            Message.SenderName = currentUser.UserName;
+            Message.RecieverId = recieverid;
+            Message.ReceiverName = recievername;
+            Message.Sent = true; 
 
             _context.Add(Message);
             await _context.SaveChangesAsync();

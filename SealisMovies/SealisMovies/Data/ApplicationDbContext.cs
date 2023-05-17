@@ -14,5 +14,6 @@ namespace SealisMovies.Data
         public DbSet<Models.Category> Categories { get; set; }
         public DbSet<Models.ProfilePicture> ProfilePicture { get; set; }
         public DbSet<Models.Message> Message { get; set; }
+
     }
 }

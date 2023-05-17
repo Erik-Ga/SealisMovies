@@ -37,11 +37,8 @@ namespace SealisMovies.Pages
             {
                 Message = new Models.Message();
 
-                Message.UserId = currentUser.UserName;
-                Message.Reciever = recieverid;
-
-
-
+                Message.SenderName = currentUser.UserName;
+                Message.RecieverId = recieverid;
             }
 
             ProfilePictures = await _context.ProfilePicture.ToListAsync();
@@ -68,10 +65,24 @@ namespace SealisMovies.Pages
             Discussions = await _context.Discussions.ToListAsync();
             return Page();
         }
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(string recieverid, string discussionid)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             var profilePicture = await _context.ProfilePicture.FirstOrDefaultAsync(p => p.UserId == currentUser.Id);
+            Message = new Message();
+            if (recieverid != null)
+            {
+                Message.SenderId = currentUser.Id;
+                Message.RecieverId = recieverid;
+                Message.Sent = true;
+
+                _context.Add(Message);
+                await _context.SaveChangesAsync();
+
+
+                return RedirectToPage("./Index");
+            }
+
 
             if (profilePicture != null)
             {
@@ -91,6 +102,7 @@ namespace SealisMovies.Pages
                     await UploadedImage.CopyToAsync(fileStream);
                 }
             }
+
             Discussion.Date = DateTime.Now;
             Discussion.Image = fileName;
             Discussion.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);

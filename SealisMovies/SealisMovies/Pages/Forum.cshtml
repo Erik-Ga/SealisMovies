@@ -20,7 +20,7 @@
         {
             //Meddelande
             //En alert berättar att man inte kan skicka meddelande till sig själv
-            @if (Model.Message != null && Model.Message.Reciever == User.Identity.Name)
+            @if (Model.Message != null && Model.Message.ReceiverName == User.Identity.Name)
             {
                 <p class="alert alert-danger">Du kan inte skriva till dig själv!</p>
 
@@ -36,7 +36,7 @@
                                 <a asp-route-deleteid="@discussion.Id" class="btn btn-danger">Ta bort</a>
                             }
                         </div>
-                        <p class="card-footer">@discussion.Date <a asp-route-messageid="@discussion.UserName.ToString()" class="btn btn-warning">@discussion.UserName</a> <img src="~/img/@discussion.ProfilePicture" alt="Profile Picture" width="50" height="50" /></p>
+                        <p class="card-footer">@discussion.Date <a asp-route-recieverid="@discussion.UserName.ToString()" class="btn btn-warning">@discussion.UserName</a> <img src="~/img/@discussion.ProfilePicture" alt="Profile Picture" width="50" height="50" /></p>
 
                     </div>
                 }
@@ -44,8 +44,8 @@
             //Det som syns när man vill skicka meddelande till en användare
             else if (Model.Message != null)
             {
-                <h3>Från: @Model.Message.UserId</h3>
-                <h3>Till: @Model.Message.Reciever</h3>
+                <h3>Från: @Model.Message.SenderName</h3>
+                <h3>Till: @Model.Message.ReceiverName</h3>
 
                 <form method="post" enctype="multipart/form-data">
 
@@ -123,7 +123,7 @@
 
                     <br>
 
-                    <input type="submit" class="btn btn-success" value="Spara Diskussion💾">
+                    <a asp-route-discussionid="User.Identity.Name"><input type="submit" class="btn btn-success" value="Spara Diskussion💾"></a>
 
                 </form>
 
