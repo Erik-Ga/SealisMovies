@@ -22,15 +22,15 @@ namespace SealisMovies.Pages
         [BindProperty]
         public Models.Message Message { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(string recieverid)
+        public async Task<IActionResult> OnGetAsync(string recieverid, string recievername)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (recieverid != null)
             {
                 Message = new Models.Message();
 
-                //Här används UserName som UserId, men bara för utseendets skull, annasr blir det hela id-strängen och det är fult :)
                 Message.SenderName = currentUser.UserName;
+                Message.ReceiverName = recievername;
                 Message.RecieverId = recieverid;
             }
             Messages = await _context.Message.ToListAsync();
@@ -38,20 +38,21 @@ namespace SealisMovies.Pages
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(string recieverid)
+        public async Task<IActionResult> OnPostAsync(string recieverid, string recievername)
         {
             var currentUser = await _userManager.GetUserAsync(User);
 
-            //Här blir UserId "korrekta" strängen via FK-kopplingen
             Message.SenderId = currentUser.Id;
+            Message.SenderName = currentUser.UserName;
             Message.RecieverId = recieverid;
+            Message.ReceiverName = recievername;
             Message.Sent = true;
 
             _context.Add(Message);
             await _context.SaveChangesAsync();
 
 
-            return RedirectToPage("./Inbox");
+            return RedirectToPage("./Index");
         }
     }
 }

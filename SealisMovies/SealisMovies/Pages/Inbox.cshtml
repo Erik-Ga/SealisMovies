@@ -17,9 +17,10 @@
         {
             if (user.UserName == message.ReceiverName)
             {
+                <p>Från: @message.SenderName</p>
                 <p>Titel: @message.Title</p>
                 <p>Text: @message.Text</p>
-                <p class="card-footer"><a asp-route-recieverid="@message.SenderId" class="btn btn-warning">Svara</a></p>
+                <p class="card-footer"><a asp-route-recieverid="@message.SenderId" asp-route-recievername="@message.SenderName" class="btn btn-warning">Svara</a></p>
             }
         }
     </div>

@@ -42,6 +42,11 @@
                             {
                                 <a asp-route-deleteid="@discussion.Id" class="btn btn-danger">Ta bort</a>
                             }
+                            @if (user != null && user.Id != discussion.UserId)
+                            {
+                                <a asp-route-reportid="@discussion.Id" class="btn btn-danger">Rapportera⚠️</a>
+
+                            }
                         </div>
                         <p class="card-footer">@discussion.Date <a asp-route-recievername="@discussion.UserName.ToString()" asp-route-recieverid="@discussion.UserId" class="btn btn-warning">@discussion.UserName</a> <img src="~/img/@discussion.ProfilePicture" alt="Profile Picture" width="50" height="50" /></p>
 
@@ -99,9 +104,15 @@
                     <div class="card-body">
                         <h5 class="card-title">@Model.Discussion.Header</h5>
                         <p class="card-text">@Model.Discussion.Text</p>
-                        @if (user != null && user.Id == @Model.Discussion.UserId || user.UserName == "sealis@hotmail.com")
+                        @if (user != null && user.Id == @Model.Discussion.UserId || user.Id == "d9360f11-dc50-4a57-9d74-71fc5663edb6")
                         {
                             <a asp-route-deleteid="@Model.Discussion.Id" class="btn btn-danger">Ta bort</a>
+
+                        }
+                        @if (user != null && user.Id != @Model.Discussion.UserId)
+                        {
+                            <a asp-route-reportid="@Model.Discussion.Id" class="btn btn-danger">Rapportera⚠️</a>
+
                         }
                     </div>
                     <p class="card-footer">@Model.Discussion.Date </p>
@@ -146,9 +157,14 @@
                         <div class="card-body">
                             <h5 class="card-title">@discussion.Header</h5>
                             <p class="card-text">@discussion.Text</p>
-                            @if (user != null && user.Id == discussion.UserId || user.UserName == "sealis@hotmail.com")
+                            @if (user != null && user.Id == discussion.UserId || user.Id == "d9360f11-dc50-4a57-9d74-71fc5663edb6")
                             {
                                 <a asp-route-deleteid="@discussion.Id" class="btn btn-danger">Ta bort</a>
+                            }
+                            @if (user != null && user.Id != discussion.UserId)
+                            {
+                                <a asp-route-reportid="@discussion.Id" class="btn btn-danger">Rapportera⚠️</a>
+
                             }
                         </div>
                         <p class="card-footer">@discussion.Date <a asp-route-recievername="@discussion.UserName" asp-route-recieverid="@discussion.UserId" class="btn btn-warning">@discussion.UserName</a> <img src="~/img/@discussion.ProfilePicture" alt="Profile Picture" width="50" height="50" /></p>

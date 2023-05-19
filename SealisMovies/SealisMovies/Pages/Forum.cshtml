@@ -1,21 +1,28 @@
 ﻿@page
-@model ForumModel
+@model IndexModel
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 @{
-    ViewData["Title"] = "Forum Page";
+    ViewData["Title"] = "Home page";
     var user = await UserManager.GetUserAsync(User);
 }
 
 <div class="text-center">
-    <h1 class="display-4">Forum</h1>
-    <p>Här kan du kika och kommentera på intressanta inlägg om olika kategorier!🎥🎞️</p>
+    <h1 class="display-4">Welcome To Sealis</h1>
+    <p>Här kan du diskutera allt om filmer!🎥🎞️</p>
 </div>
 
 @*//Det som syns när man är inloggad*@
 @if (SignInManager.IsSignedIn(User))
 {
-    <div class="row">
+    if (Model.Message == null)
+    {
+        <br />
+        <h1 class="text-center">Du är inloggad som @User.Identity.Name - Välkommen!♡</h1>
+        <br />
+    }
+
+    <div class="row justify-content-center">
         @if (Model.Discussions != null)
         {
             //Meddelande
@@ -35,12 +42,18 @@
                             {
                                 <a asp-route-deleteid="@discussion.Id" class="btn btn-danger">Ta bort</a>
                             }
+                            @if (user != null && user.Id != discussion.UserId)
+                            {
+                                <a asp-route-reportid="@discussion.Id" class="btn btn-danger">Rapportera⚠️</a>
+
+                            }
                         </div>
-                        <p class="card-footer">@discussion.Date <a asp-route-recieverid="@discussion.UserName.ToString()" class="btn btn-warning">@discussion.UserName</a> <img src="~/img/@discussion.ProfilePicture" alt="Profile Picture" width="50" height="50" /></p>
+                        <p class="card-footer">@discussion.Date <a asp-route-recievername="@discussion.UserName.ToString()" asp-route-recieverid="@discussion.UserId" class="btn btn-warning">@discussion.UserName</a> <img src="~/img/@discussion.ProfilePicture" alt="Profile Picture" width="50" height="50" /></p>
 
                     </div>
                 }
             }
+            //Meddelande
             //Det som syns när man vill skicka meddelande till en användare
             else if (Model.Message != null)
             {
@@ -61,6 +74,33 @@
 
                 </form>
             }
+            //EJ FÄRDIGT!! Bekräftelsemeddelande att ditt meddelande har skickats
+            else if (Model.Message != null && Model.Message.Sent == true)
+            {
+                <p class="alert alert-success">Ditt meddelande har skickats till @Model.Message.ReceiverName</p>
+
+                @foreach (var discussion in Model.Discussions)
+                {
+                    <div class="card m-2 p-2" style="width: 18rem">
+                        <a asp-route-showid="@discussion.Id"><img class="card-img-top" src="~/img/@discussion.Image"></a>
+                        <div class="card-body">
+                            <h5 class="card-title">@discussion.Header</h5>
+                            <p class="card-text">@discussion.Text</p>
+                            @if (user != null && user.Id == discussion.UserId || user.Id == "d9360f11-dc50-4a57-9d74-71fc5663edb6")
+                            {
+                                <a asp-route-deleteid="@discussion.Id" class="btn btn-danger">Ta bort</a>
+                            }
+                            @if (user != null && user.Id != discussion.UserId)
+                            {
+                                <a asp-route-reportid="@discussion.Id" class="btn btn-danger">Rapportera⚠️</a>
+
+                            }
+                        </div>
+                        <p class="card-footer">@discussion.Date <a asp-route-recievername="@discussion.UserName.ToString()" asp-route-recieverid="@discussion.UserId" class="btn btn-warning">@discussion.UserName</a> <img src="~/img/@discussion.ProfilePicture" alt="Profile Picture" width="50" height="50" /></p>
+
+                    </div>
+                }
+            }
             //Om man klickar in på ett specifikt inlägg
             else if (Model.Discussion != null)
             {
@@ -72,6 +112,11 @@
                         @if (user != null && user.Id == @Model.Discussion.UserId || user.UserName == "sealis@hotmail.com")
                         {
                             <a asp-route-deleteid="@Model.Discussion.Id" class="btn btn-danger">Ta bort</a>
+                        }
+                        @if (user != null && user.Id != @Model.Discussion.UserId)
+                        {
+                            <a asp-route-reportid="@Model.Discussion.Id" class="btn btn-danger">Rapportera⚠️</a>
+
                         }
                     </div>
                     <p class="card-footer">@Model.Discussion.Date </p>
@@ -138,8 +183,13 @@
                             {
                                 <a asp-route-deleteid="@discussion.Id" class="btn btn-danger">Ta bort</a>
                             }
+                            @if (user != null && user.Id != discussion.UserId)
+                            {
+                                <a asp-route-reportid="@discussion.Id" class="btn btn-danger">Rapportera⚠️</a>
+
+                            }
                         </div>
-                        <p class="card-footer">@discussion.Date <a asp-route-recieverid="@discussion.UserName.ToString()" class="btn btn-warning">@discussion.UserName</a> <img src="~/img/@discussion.ProfilePicture" alt="Profile Picture" width="50" height="50" /></p>
+                        <p class="card-footer">@discussion.Date <a asp-route-recievername="@discussion.UserName" asp-route-recieverid="@discussion.UserId" class="btn btn-warning">@discussion.UserName</a> <img src="~/img/@discussion.ProfilePicture" alt="Profile Picture" width="50" height="50" /></p>
 
                     </div>
                 }
@@ -153,6 +203,7 @@ else
 {
     @if (Model.Discussion != null)
     {
+        <div class="alert alert-danger">Du är INTE inloggad!💔</div>
         <div class="card m-2" style="width: 18rem">
             <img class="card-img-top" src="~/img/@Model.Discussion.Image">
             <div class="card-body">
@@ -190,3 +241,7 @@ else
     }
 
 }
+
+
+
+
