@@ -62,7 +62,7 @@ namespace SealisMovies.Pages
                     _context.Discussions.Remove(discussion);
                     await _context.SaveChangesAsync();
 
-                    return RedirectToPage("./Index");
+                    return RedirectToPage("./Forum");
                 }
             }
             Discussions = await _context.Discussions.ToListAsync();
@@ -86,7 +86,7 @@ namespace SealisMovies.Pages
                 await _context.SaveChangesAsync();
 
 
-                return RedirectToPage("./Index");
+                return RedirectToPage("./Forum");
             }
 
 
@@ -118,7 +118,7 @@ namespace SealisMovies.Pages
             await _context.SaveChangesAsync();
 
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("./Forum");
         }
     }
 }

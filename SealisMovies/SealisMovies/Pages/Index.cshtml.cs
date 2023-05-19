@@ -32,7 +32,7 @@ namespace SealisMovies.Pages
         [BindProperty]
         public IFormFile UploadedImage { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int showid, int deleteid, string recieverid, string recievername, int reportid)
+        public async Task<IActionResult> OnGetAsync(int showid, int deleteid, string recieverid, string recievername)
         {
             var currentUser = await _userManager.GetUserAsync(User);
 
@@ -46,13 +46,6 @@ namespace SealisMovies.Pages
             }
             Messages = await _context.Message.ToListAsync();
             ProfilePictures = await _context.ProfilePicture.ToListAsync();
-
-            if (reportid != null)
-            {
-                Discussion = await _context.Discussions.FindAsync(reportid);
-                //Discussion.Reported = true;
-                await _context.SaveChangesAsync();
-            }
 
             if (showid != 0)
             {
@@ -77,8 +70,15 @@ namespace SealisMovies.Pages
             Discussions = await _context.Discussions.ToListAsync();
             return Page();
         }
-        public async Task<IActionResult> OnPostAsync(string recieverid, string recievername)
+        public async Task<IActionResult> OnPostAsync(string recieverid, string recievername, int reportid)
         {
+            if (reportid != null)
+            {
+                Discussion = await _context.Discussions.FindAsync(reportid);
+                Discussion.Reported = true;
+                await _context.SaveChangesAsync();
+            }
+
             var currentUser = await _userManager.GetUserAsync(User);
 
             Message.SenderId = currentUser.Id;
