@@ -107,12 +107,10 @@
                         @if (user != null && user.Id == @Model.Discussion.UserId || user.Id == "d9360f11-dc50-4a57-9d74-71fc5663edb6")
                         {
                             <a asp-route-deleteid="@Model.Discussion.Id" class="btn btn-danger">Ta bort</a>
-
                         }
                         @if (user != null && user.Id != @Model.Discussion.UserId)
                         {
                             <a asp-route-reportid="@Model.Discussion.Id" asp-page-handler="Report" class="btn btn-danger">Rapportera⚠️</a>
-
                         }
                     </div>
                     <p class="card-footer">@Model.Discussion.Date </p>

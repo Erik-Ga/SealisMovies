@@ -2,9 +2,11 @@
 @model SealisMovies.Pages.AdminModel
 @using SealisMovies.Models
 @using System.Threading.Tasks
+@inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
 @{
+    var user = await UserManager.GetUserAsync(User);
 }
 
 @*//Här kan admin skapa kategorier*@
@@ -44,3 +46,26 @@
 </ul>
 
 <h1><u>Rapporterade inlägg</u></h1>
+<div class="row justify-content-center">
+    @foreach (var discussion in Model.ReportedDiscussions)
+    {
+        <div class="card m-2 p-2" style="width: 18rem">
+            <a asp-route-showid="@discussion.Id"><img class="card-img-top" src="~/img/@discussion.Image"></a>
+            <div class="card-body">
+                <h5 class="card-title">@discussion.Header</h5>
+                <p class="card-text">@discussion.Text</p>
+                @if (user != null && user.Id == discussion.UserId || user.UserName == "sealis@hotmail.com")
+                {
+                    <form method="post" asp-page-handler="DeleteDiscussion" class="d-inline">
+                        <input type="hidden" name="discussionId" value="@discussion.Id" />
+                        <button type="submit" class="btn btn-danger">Ta bort</button>
+                    </form>
+                                        <form method="post" asp-page-handler="RevertReportedStatus" class="d-inline">
+                        <input type="hidden" name="discussionId" value="@discussion.Id" />
+                        <button type="submit" class="btn btn-primary">Avrapportera</button>
+                    </form>
+                }
+            </div>
+        </div>
+    }
+</div>

@@ -19,12 +19,16 @@ namespace SealisMovies.Pages
             _context = context;
         }
         public List<Models.Category> Categories { get; set; }
+        public List<Discussion> ReportedDiscussions { get; set; }
 
         [BindProperty]
         public Models.Category Category { get; set; }
         public async Task<IActionResult> OnGetAsync()
         {
             Categories = await _context.Categories.ToListAsync();
+            ReportedDiscussions = await _context.Discussions
+                .Where(d => d.Reported == true)
+                .ToListAsync();
             return Page();
         }
 
@@ -62,6 +66,28 @@ namespace SealisMovies.Pages
             if (category != null)
             {
                 category.CategoryName = newCategoryName;
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToPage("/Admin");
+        }
+        public async Task<IActionResult> OnPostDeleteDiscussionAsync(int discussionId)
+        {
+            var discussion = await _context.Discussions.FindAsync(discussionId);
+            if (discussion != null)
+            {
+                _context.Discussions.Remove(discussion);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToPage("/Admin");
+        }
+        public async Task<IActionResult> OnPostRevertReportedStatusAsync(int discussionId)
+        {
+            var discussion = await _context.Discussions.FindAsync(discussionId);
+            if (discussion != null)
+            {
+                discussion.Reported = false;
                 await _context.SaveChangesAsync();
             }
 
