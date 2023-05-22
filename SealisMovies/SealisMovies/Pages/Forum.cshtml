@@ -122,7 +122,16 @@
                     </div>
                     <p class="card-footer">@Model.Discussion.Date </p>
                     <p>@Model.Discussion.UserName <img src="~/img/@Model.Discussion.ProfilePicture" alt="Profile Picture" width="50" height="50" /></p>
-
+                    @if (Model.Comments != null)
+                    {
+                        @foreach (var comment in Model.Comments.Where(m => m.DiscussionId == Model.Discussion.Id))
+                        {
+                            <p>------------------------------</p>
+                            <p>@comment.Text</p>
+                            <p>@comment.UserName</p>
+                            <p>@comment.Date</p>
+                        }
+                    }
 
                 </div>
 
@@ -135,19 +144,14 @@
                     <h1 class="text-center">Kommentera inlägget</h1>
 
                     <form method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="discussionid" value="@Model.Discussion.Id" />
 
-                        <label asp-for="Discussion.Header" class="form-label"></label>
-                        <input asp-for="Discussion.Header" class="form-control" />
-
-                        <label asp-for="Discussion.Text" class="form-label"></label>
-                        <textarea asp-for="Discussion.Text" class="form-control" cols="40" rows="5"></textarea>
-
-                        <label asp-for="Discussion.Image" class="form-label"></label>
-                        <input type="file" class="form-control" name="UploadedImage">
+                        <label asp-for="Comment.Text" class="form-label"></label>
+                        <textarea asp-for="Comment.Text" class="form-control" cols="40" rows="5"></textarea>
 
                         <br>
 
-                        <input type="submit" class="btn btn-success" value="Spara Diskussion💾">
+                        <input type="submit" class="btn btn-success" value="Spara kommentar💾" asp-page-handler="Comment">
 
                     </form>
                 }
