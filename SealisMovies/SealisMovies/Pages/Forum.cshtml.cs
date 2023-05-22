@@ -23,7 +23,7 @@ namespace SealisMovies.Pages
         public List<Models.Discussion> Discussions { get; set; }
         public List<Message> Messages { get; set; }
         public List<Models.Comment> Comments { get; set; }
-
+        public List<Models.Category> Categories { get; set; }
         [BindProperty]
         public Models.Comment Comment { get; set; }
 
@@ -53,6 +53,7 @@ namespace SealisMovies.Pages
                 Message.ReceiverName = recievername;
                 Message.RecieverId = recieverid;
             }
+            Categories = await _context.Categories.ToListAsync();
             Comments = await _context.Comment.ToListAsync();
             Messages = await _context.Message.ToListAsync();
             ProfilePictures = await _context.ProfilePicture.ToListAsync();

@@ -36,6 +36,7 @@
                     <div class="card m-2 p-2" style="width: 18rem">
                         <a asp-route-showid="@discussion.Id"><img class="card-img-top" src="~/img/@discussion.Image"></a>
                         <div class="card-body">
+                            <h5 class="card-title">Kategori: @discussion.Category</h5>
                             <h5 class="card-title">@discussion.Header</h5>
                             <p class="card-text">@discussion.Text</p>
                             @if (user != null && user.Id == discussion.UserId || user.UserName == "sealis@hotmail.com")
@@ -84,6 +85,7 @@
                     <div class="card m-2 p-2" style="width: 18rem">
                         <a asp-route-showid="@discussion.Id"><img class="card-img-top" src="~/img/@discussion.Image"></a>
                         <div class="card-body">
+                            <h5 class="card-title">Kategori: @discussion.Category</h5>
                             <h5 class="card-title">@discussion.Header</h5>
                             <p class="card-text">@discussion.Text</p>
                             @if (user != null && user.Id == discussion.UserId || user.UserName == "sealis@hotmail.com")
@@ -102,6 +104,7 @@
                 <div class="card m-2" style="width: 18rem">
                     <img class="card-img-top" src="~/img/@Model.Discussion.Image">
                     <div class="card-body">
+                        <h5 class="card-title">Kategori: @Model.Discussion.Category</h5>
                         <h5 class="card-title">@Model.Discussion.Header</h5>
                         <p class="card-text">@Model.Discussion.Text</p>
                         @if (user != null && user.Id == @Model.Discussion.UserId || user.Id == "d9360f11-dc50-4a57-9d74-71fc5663edb6")
@@ -156,6 +159,7 @@
                     <div class="card m-2 p-2" style="width: 18rem">
                         <a asp-route-showid="@discussion.Id"><img class="card-img-top" src="~/img/@discussion.Image"></a>
                         <div class="card-body">
+                            <h5 class="card-title">Kategori: @discussion.Category</h5>
                             <h5 class="card-title">@discussion.Header</h5>
                             <p class="card-text">@discussion.Text</p>
                             @if (user != null && user.Id == discussion.UserId || user.Id == "d9360f11-dc50-4a57-9d74-71fc5663edb6")
@@ -186,6 +190,7 @@ else
         <div class="card m-2" style="width: 18rem">
             <img class="card-img-top" src="~/img/@Model.Discussion.Image">
             <div class="card-body">
+                <h5 class="card-title">Kategori: @Model.Discussion.Category</h5>
                 <h5 class="card-title">@Model.Discussion.Header</h5>
                 <p class="card-text">@Model.Discussion.Text</p>
                 @if (user != null && user.Id == @Model.Discussion.UserId)
@@ -205,6 +210,7 @@ else
                 <div class="card m-2 p-2" style="width: 18rem">
                     <a asp-route-showid="@discussion.Id"><img class="card-img-top" src="~/img/@discussion.Image"></a>
                     <div class="card-body">
+                        <h5 class="card-title">Kategori: @discussion.Category</h5>
                         <h5 class="card-title">@discussion.Header</h5>
                         <p class="card-text">@discussion.Text</p>
                         @if (user != null && user.Id == discussion.UserId)
