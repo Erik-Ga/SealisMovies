@@ -32,7 +32,7 @@ namespace SealisMovies.Pages
         [BindProperty]
         public IFormFile UploadedImage { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int showid, int deleteid, string recieverid, string recievername)
+        public async Task<IActionResult> OnGetAsync(int showid, int deleteid, string recieverid, string recievername, int reportid)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (recieverid != null)
@@ -45,7 +45,10 @@ namespace SealisMovies.Pages
             }
             Messages = await _context.Message.ToListAsync();
             ProfilePictures = await _context.ProfilePicture.ToListAsync();
-
+            if (reportid != 0)
+            {
+                return await OnPostReportAsync(reportid);
+            }
             if (showid != 0)
             {
                 Discussion = await _context.Discussions.FindAsync(showid);
@@ -68,7 +71,7 @@ namespace SealisMovies.Pages
             Discussions = await _context.Discussions.ToListAsync();
             return Page();
         }
-        public async Task<IActionResult> OnPostAsync(string recieverid, string discussionid, string recievername)
+        public async Task<IActionResult> OnPostAsync(string recieverid, string discussionid, string recievername, int reportid)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             var profilePicture = await _context.ProfilePicture.FirstOrDefaultAsync(p => p.UserId == currentUser.Id);
@@ -88,7 +91,10 @@ namespace SealisMovies.Pages
 
                 return RedirectToPage("./Forum");
             }
-
+            if (reportid != 0)
+            {
+                return await OnPostReportAsync(reportid);
+            }
 
             if (profilePicture != null)
             {
@@ -120,5 +126,18 @@ namespace SealisMovies.Pages
 
             return RedirectToPage("./Forum");
         }
+
+        public async Task<IActionResult> OnPostReportAsync(int reportid)
+        {
+            var discussion = await _context.Discussions.FindAsync(reportid);
+            if (discussion != null)
+            {
+                discussion.Reported = true;
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToPage("./Forum");
+        }
+
     }
 }

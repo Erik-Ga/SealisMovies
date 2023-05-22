@@ -32,7 +32,7 @@ namespace SealisMovies.Pages
         [BindProperty]
         public IFormFile UploadedImage { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int showid, int deleteid, string recieverid, string recievername)
+        public async Task<IActionResult> OnGetAsync(int showid, int deleteid, string recieverid, string recievername, int reportid)
         {
             var currentUser = await _userManager.GetUserAsync(User);
 
@@ -46,7 +46,10 @@ namespace SealisMovies.Pages
             }
             Messages = await _context.Message.ToListAsync();
             ProfilePictures = await _context.ProfilePicture.ToListAsync();
-
+            if (reportid != 0)
+            {
+                return await OnPostReportAsync(reportid);
+            }
             if (showid != 0)
             {
                 Discussion = await _context.Discussions.FindAsync(showid);
@@ -72,13 +75,10 @@ namespace SealisMovies.Pages
         }
         public async Task<IActionResult> OnPostAsync(string recieverid, string recievername, int reportid)
         {
-            if (reportid != null)
+            if (reportid != 0)
             {
-                Discussion = await _context.Discussions.FindAsync(reportid);
-                Discussion.Reported = true;
-                await _context.SaveChangesAsync();
+                return await OnPostReportAsync(reportid);
             }
-
             var currentUser = await _userManager.GetUserAsync(User);
 
             Message.SenderId = currentUser.Id;
@@ -91,6 +91,17 @@ namespace SealisMovies.Pages
             _context.Add(Message);
             await _context.SaveChangesAsync();
 
+
+            return RedirectToPage("./Index");
+        }
+        public async Task<IActionResult> OnPostReportAsync(int reportid)
+        {
+            var discussion = await _context.Discussions.FindAsync(reportid);
+            if (discussion != null)
+            {
+                discussion.Reported = true;
+                await _context.SaveChangesAsync();
+            }
 
             return RedirectToPage("./Index");
         }

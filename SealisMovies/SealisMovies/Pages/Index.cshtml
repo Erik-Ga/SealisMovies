@@ -44,7 +44,7 @@
                             }
                             @if (user != null && user.Id != discussion.UserId)
                             {
-                                <a asp-route-reportid="@discussion.Id" class="btn btn-danger">Rapportera⚠️</a>
+                                <a asp-route-reportid="@discussion.Id" asp-page-handler="Report" class="btn btn-danger">Rapportera⚠️</a>
 
                             }
                         </div>
@@ -111,7 +111,7 @@
                         }
                         @if (user != null && user.Id != @Model.Discussion.UserId)
                         {
-                            <a asp-route-reportid="@Model.Discussion.Id" class="btn btn-danger">Rapportera⚠️</a>
+                            <a asp-route-reportid="@Model.Discussion.Id" asp-page-handler="Report" class="btn btn-danger">Rapportera⚠️</a>
 
                         }
                     </div>
@@ -163,7 +163,7 @@
                             }
                             @if (user != null && user.Id != discussion.UserId)
                             {
-                                <a asp-route-reportid="@discussion.Id" class="btn btn-danger">Rapportera⚠️</a>
+                                <a asp-route-reportid="@discussion.Id" asp-page-handler="Report" class="btn btn-danger">Rapportera⚠️</a>
 
                             }
                         </div>
