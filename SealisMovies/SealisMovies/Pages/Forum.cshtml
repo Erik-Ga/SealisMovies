@@ -60,6 +60,8 @@
                 <h3>Till: @Model.Message.ReceiverName</h3>
 
                 <form method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="recievername" value="@Model.Message.ReceiverName" />
+                    <input type="hidden" name="recieverid" value="@Model.Message.RecieverId" />
 
                     <label asp-for="Message.Title" class="form-label"></label>
                     <input asp-for="Message.Title" class="form-control" />
@@ -69,7 +71,7 @@
 
                     <br>
 
-                    <input type="submit" class="btn btn-success" value="Skicka✉️">
+                    <input type="submit" class="btn btn-success" value="Skicka✉️" asp-page-handler="Message">
 
                 </form>
             }

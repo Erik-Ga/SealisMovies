@@ -78,18 +78,7 @@ namespace SealisMovies.Pages
             Message = new Message();
             if (recieverid != null)
             {
-
-                Message.SenderId = currentUser.Id;
-                Message.SenderName = currentUser.UserName;
-                Message.RecieverId = recieverid;
-                Message.ReceiverName = recievername;
-                Message.Sent = true;
-
-                _context.Add(Message);
-                await _context.SaveChangesAsync();
-
-
-                return RedirectToPage("./Forum");
+                return await OnPostMessageAsync(recieverid, recievername);
             }
             if (reportid != 0)
             {
@@ -138,6 +127,25 @@ namespace SealisMovies.Pages
 
             return RedirectToPage("./Forum");
         }
+        public async Task<IActionResult> OnPostMessageAsync(string recieverid, string recievername)
+        {
+            if (recieverid != null)
+            {
+                var currentUser = await _userManager.GetUserAsync(User);
 
+                Message.SenderId = currentUser.Id;
+                Message.SenderName = currentUser.UserName;
+                Message.RecieverId = recieverid;
+                Message.ReceiverName = recievername;
+                Message.Sent = true;
+
+
+                _context.Add(Message);
+                await _context.SaveChangesAsync();
+
+                return RedirectToPage("./Index");
+            }
+            return RedirectToPage("./Index");
+        }
     }
 }
