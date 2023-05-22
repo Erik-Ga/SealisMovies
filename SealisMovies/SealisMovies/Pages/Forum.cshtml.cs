@@ -22,6 +22,10 @@ namespace SealisMovies.Pages
         public List<ProfilePicture> ProfilePictures { get; set; }
         public List<Models.Discussion> Discussions { get; set; }
         public List<Message> Messages { get; set; }
+        public List<Models.Comment> Comments { get; set; }
+
+        [BindProperty]
+        public Models.Comment Comment { get; set; }
 
         [BindProperty]
         public Models.Discussion Discussion { get; set; }
@@ -32,9 +36,15 @@ namespace SealisMovies.Pages
         [BindProperty]
         public IFormFile UploadedImage { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int showid, int deleteid, string recieverid, string recievername, int reportid)
+        public async Task<IActionResult> OnGetAsync(int showid, int deleteid, string recieverid, string recievername, int reportid, int discussionid)
         {
             var currentUser = await _userManager.GetUserAsync(User);
+            if (discussionid != null)
+            {
+                Comment = new Models.Comment();
+
+                Comment.DiscussionId = discussionid;
+            }
             if (recieverid != null)
             {
                 Message = new Models.Message();
@@ -43,6 +53,7 @@ namespace SealisMovies.Pages
                 Message.ReceiverName = recievername;
                 Message.RecieverId = recieverid;
             }
+            Comments = await _context.Comment.ToListAsync();
             Messages = await _context.Message.ToListAsync();
             ProfilePictures = await _context.ProfilePicture.ToListAsync();
             if (reportid != 0)
@@ -71,7 +82,7 @@ namespace SealisMovies.Pages
             Discussions = await _context.Discussions.ToListAsync();
             return Page();
         }
-        public async Task<IActionResult> OnPostAsync(string recieverid, string discussionid, string recievername, int reportid)
+        public async Task<IActionResult> OnPostAsync(string recieverid, int discussionid, string recievername, int reportid)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             var profilePicture = await _context.ProfilePicture.FirstOrDefaultAsync(p => p.UserId == currentUser.Id);
@@ -84,10 +95,13 @@ namespace SealisMovies.Pages
             {
                 return await OnPostReportAsync(reportid);
             }
+            if (discussionid != 0)
+            {
+                return await OnPostCommentAsync(reportid);
+            }
 
             if (profilePicture != null)
             {
-                // Set Discussion.ProfilePicture to the matching ProfilePicture.Image
                 Discussion.ProfilePicture = profilePicture.Image;
             }
 
@@ -124,6 +138,28 @@ namespace SealisMovies.Pages
                 discussion.Reported = true;
                 await _context.SaveChangesAsync();
             }
+
+            return RedirectToPage("./Forum");
+        }
+        public async Task<IActionResult> OnPostCommentAsync(int discussionid)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            var profilePicture = await _context.ProfilePicture.FirstOrDefaultAsync(p => p.UserId == currentUser.Id);
+
+            if (profilePicture != null)
+            {
+                Comment.Image = profilePicture.Image;
+            }
+
+            Comment.UserId = currentUser.Id;
+            Comment.UserName = currentUser.UserName;
+            Comment.DiscussionId = discussionid;
+            Comment.Date = DateTime.Now;
+
+
+            _context.Add(Comment);
+            await _context.SaveChangesAsync();
+
 
             return RedirectToPage("./Forum");
         }
