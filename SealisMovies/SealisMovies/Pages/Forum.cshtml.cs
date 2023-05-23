@@ -74,6 +74,10 @@ namespace SealisMovies.Pages
                     {
                         System.IO.File.Delete("./wwwroot/img/" + discussion.Image);
                     }
+
+                    var comments = _context.Comment.Where(c => c.DiscussionId == discussion.Id);
+                    _context.Comment.RemoveRange(comments);
+
                     _context.Discussions.Remove(discussion);
                     await _context.SaveChangesAsync();
 
