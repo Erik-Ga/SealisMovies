@@ -54,5 +54,17 @@ namespace SealisMovies.Pages
 
             return RedirectToPage("./Inbox");
         }
+        public async Task<IActionResult> OnPostDeleteAsync(int deleteid)
+        {
+            var message = await _context.Message.FindAsync(deleteid);
+            if (message != null)
+            {
+                _context.Message.Remove(message);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToPage("./Inbox");
+        }
+
     }
 }
