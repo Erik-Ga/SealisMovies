@@ -116,13 +116,13 @@
                             <a asp-route-reportid="@Model.Discussion.Id" asp-page-handler="Report" class="btn btn-danger">Rapportera⚠️</a>
                         }
                     </div>
-                    <p class="card-footer">@Model.Discussion.Date </p>
-                    <p>@Model.Discussion.UserName <img src="~/img/@Model.Discussion.ProfilePicture" alt="Profile Picture" width="50" height="50" /></p>
+                    <p class="card-footer" style="font-weight: bold;">@Model.Discussion.Date </p>
+                    <p class="mx-3" style="font-weight: bold;">@Model.Discussion.UserName <img src="~/img/@Model.Discussion.ProfilePicture" alt="Profile Picture" width="50" height="50" /></p>
                     @if(Model.Comments != null)
                     {
                         @foreach (var comment in Model.Comments.Where(m => m.DiscussionId == Model.Discussion.Id))
                         {
-                            <p>------------------------------</p>
+                            <p class="card-footer"></p>
                             <p>@comment.Text</p>
                             <p>@comment.UserName</p>
                             <p>@comment.Date</p>
