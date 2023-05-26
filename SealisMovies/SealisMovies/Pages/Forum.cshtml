@@ -6,8 +6,23 @@
     ViewData["Title"] = "Home page";
     var user = await UserManager.GetUserAsync(User);
 }
+<style>
+    .cardColor {
+        background-color:steelblue;
+        border-style: double;
+        border-width: 1em;
+        border-color:black;
+        color: black;
+    }
+    .buttons
+    {
+        background-color: steelblue;
+        border-style: double;
+        border-width: 0.7em;
+    }
+</style>
 
-<div class="text-center">
+<div class="cardColor text-center">
     <h1 class="display-4">Welcome To Sealis</h1>
     <p>Här kan du diskutera allt om filmer!🎥🎞️</p>
 </div>
@@ -107,7 +122,7 @@
             //Om man klickar in på ett specifikt inlägg
             else if (Model.Discussion != null)
             {
-                <div class="card m-2" style="width: 18rem">
+                <div class="cardColor card m-2" style="width: 30rem">
                     <img class="card-img-top" src="~/img/@Model.Discussion.Image">
                     <div class="card-body">
                         <h5 class="card-title">Kategori: @Model.Discussion.Category</h5>
@@ -191,7 +206,7 @@
 
                 @foreach (var discussion in Model.Discussions)
                 {
-                    <div class="card m-2 p-2" style="width: 18rem">
+                    <div class="cardColor card m-2 p-2" style="width: 25rem">
                         <a asp-route-showid="@discussion.Id"><img class="card-img-top" src="~/img/@discussion.Image"></a>
                         <div class="card-body">
                             <h5 class="card-title">Kategori: @discussion.Category</h5>
@@ -207,7 +222,7 @@
 
                             }
                         </div>
-                        <p class="card-footer">@discussion.Date <a asp-route-recievername="@discussion.UserName" asp-route-recieverid="@discussion.UserId" class="btn btn-warning">@discussion.UserName</a> <img src="~/img/@discussion.ProfilePicture" alt="Profile Picture" width="50" height="50" /></p>
+                        <p class="card-footer">@discussion.Date <a asp-route-recievername="@discussion.UserName" asp-route-recieverid="@discussion.UserId" class="buttons btn btn-warning">@discussion.UserName</a> <img src="~/img/@discussion.ProfilePicture" alt="Profile Picture" width="50" height="50" /></p>
 
                     </div>
                 }

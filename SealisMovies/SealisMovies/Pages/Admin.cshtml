@@ -5,8 +5,42 @@
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
+<style>
+    .prefilled-text {
+        color: darkgrey;
+    }
+    .cardColor {
+        background-color: steelblue;
+        border-style: double;
+        border-width: 1em;
+        border-color: black;
+        color: black;
+    }
+
+    .categoryColor {
+        padding: 0.5em;
+        background-color: steelblue;
+        border-style: double;
+        border-width: 0.5em;
+        border-color: black;
+        color: black;
+    }
+
+    .buttons {
+        background-color: steelblue;
+        border-style: double;
+        border-width: 0.7em;
+    }
+</style>
+
 @{
     var user = await UserManager.GetUserAsync(User);
+}
+@{
+    string defaultText1 = "Ändra kategorinamn";
+}
+@{
+    string defaultText2 = "Kategorinamn";
 }
 
 @*//Här kan admin skapa kategorier*@
@@ -15,10 +49,13 @@
     <div class="form-group">
 
         <label asp-for="Category.CategoryName" class="form-label">Kategori</label>
-        <input asp-for="Category.CategoryName" class="form-control" />
+        <input asp-for="Category.CategoryName" class="form-control prefilled-text"
+               value="@defaultText2"
+               onfocus="if (this.value === '@defaultText2') { this.value = ''; }"
+               onblur="if (this.value === '') { this.value = '@defaultText2'; }" />
 
     </div>
-
+    <br />
     <input type="submit" asp-page-handler="CreateCategory" class="btn btn-success" value="Spara Kategori💾" />
 
 </form>
@@ -30,42 +67,58 @@
 <ul>
     @foreach (var category in Model.Categories)
     {
-        <li>
+        <li class="categoryColor">
             @category.CategoryName
             <form method="post" asp-page-handler="RemoveCategory" class="d-inline">
                 <input type="hidden" name="categoryId" value="@category.Id" />
                 <input type="submit" class="btn btn-danger btn-sm" value="Remove" onclick="return confirm('Are you sure you want to remove this category?')" />
             </form>
+            <p></p>
             <form method="post" asp-page-handler="UpdateCategory" class="d-inline ml-2">
                 <input type="hidden" name="categoryId" value="@category.Id" />
-                <input type="text" name="newCategoryName" class="form-control form-control-sm d-inline" />
+
+                <input style="color: darkgrey" type="text" name="newCategoryName" class="form-control form-control-sm d-inline prefilled-text"
+                   value="@defaultText1"
+                   onfocus="if (this.value === '@defaultText1') { this.value = ''; this.style.color = 'black'; }"
+                   onblur="if (this.value === '') { this.value = '@defaultText1'; this.style.color = 'darkgrey'; }" />
+                <p></p>
                 <input type="submit" class="btn btn-primary btn-sm" value="Update" />
             </form>
+            <p></p>
         </li>
+        <br />
     }
 </ul>
 
 <h1><u>Rapporterade inlägg</u></h1>
-<div class="row justify-content-center">
-    @foreach (var discussion in Model.ReportedDiscussions)
-    {
-        <div class="card m-2 p-2" style="width: 18rem">
-            <a asp-route-showid="@discussion.Id"><img class="card-img-top" src="~/img/@discussion.Image"></a>
-            <div class="card-body">
-                <h5 class="card-title">@discussion.Header</h5>
-                <p class="card-text">@discussion.Text</p>
-                @if (user != null && user.Id == discussion.UserId || user.UserName == "sealis@hotmail.com")
-                {
-                    <form method="post" asp-page-handler="DeleteDiscussion" class="d-inline">
-                        <input type="hidden" name="discussionId" value="@discussion.Id" />
-                        <button type="submit" class="btn btn-danger">Ta bort</button>
-                    </form>
-                                        <form method="post" asp-page-handler="RevertReportedStatus" class="d-inline">
-                        <input type="hidden" name="discussionId" value="@discussion.Id" />
-                        <button type="submit" class="btn btn-primary">Avrapportera</button>
-                    </form>
-                }
+@if (Model.ReportedDiscussions != null)
+{
+    <div class="row justify-content-center">
+        @foreach (var discussion in Model.ReportedDiscussions)
+        {
+            <div class="cardColor card m-2 p-2" style="width: 18rem">
+                <a asp-route-showid="@discussion.Id"><img class="card-img-top" src="~/img/@discussion.Image"></a>
+                <div class="card-body">
+                    <h5 class="card-title">@discussion.Header</h5>
+                    <p class="card-text">@discussion.Text</p>
+                    @if (user != null && user.Id == discussion.UserId || user.UserName == "sealis@hotmail.com")
+                    {
+                        <form method="post" asp-page-handler="DeleteDiscussion" class="d-inline">
+                            <input type="hidden" name="discussionId" value="@discussion.Id" />
+                            <button type="submit" class="btn btn-danger">Ta bort</button>
+                        </form>
+                        <form method="post" asp-page-handler="RevertReportedStatus" class="d-inline">
+                            <input type="hidden" name="discussionId" value="@discussion.Id" />
+                            <button type="submit" class="btn btn-primary">Avrapportera</button>
+                        </form>
+                    }
+                </div>
             </div>
-        </div>
-    }
-</div>
+        }
+    </div>
+}
+@if(Model.ReportedDiscussions == null || !Model.ReportedDiscussions.Any())
+{
+    <div class="alert alert-success">Det finns inga rapporterade inlägg 😊</div>
+}
+

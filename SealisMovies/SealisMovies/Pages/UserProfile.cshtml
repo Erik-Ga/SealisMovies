@@ -6,12 +6,29 @@
 @{
     var user = await UserManager.GetUserAsync(User);
 }
+<style>
+    .currentPic {
+        border-width: 0.3em;
+        border-style:solid;
+        border-color:black;
+        background-color:lightsteelblue;
+    }
+    .frames
+    {
+        background-color:steelblue;
+        padding: 1em;
+        border-width: 0.5em;
+        border-style: solid;
+        border-style:double;
+        border-color: black;
+    }
+</style>
 
 @*//Här kan användaren ladda upp en profilbild som sparas till databasen kopplat till inloggad användares id*@
 @if (!Model.UserProfilePictures.Any(p => p.UserId == "bdaebc49-ef46-40cc-b578-0ad6bed05094"))
 {
     <h3>Lägg till en profilbild!</h3>
-    <form method="post" enctype="multipart/form-data">
+    <form class="frames" method="post" enctype="multipart/form-data">
 
         <label asp-for="ProfilePicture.Image" class="form-label"></label>
         <input type="file" class="form-control" name="UploadedImage">
@@ -22,21 +39,24 @@
 
     </form>
 }
+<br />
 @*//Här visas nuvarande profilbild som användaren kan ta bort eller uppdatara genom att ladda upp och erstätta med ny profilbild*@
 @if (Model.UserProfilePictures != null && Model.UserProfilePictures.Any())
 {
     <h4>Nuvarande profilbild:</h4>
-    <ul style="list-style-type: none;">
+    <ul class="frames" style="list-style-type: none;">
         @foreach (var picture in Model.UserProfilePictures)
         {
             <li>
-                <img src="~/img/@picture.Image" alt="Profile Picture" width="250" height="250">
+                <img src="~/img/@picture.Image" alt="Profile Picture" width="250" height="250" class="currentPic">
+                <p></p>
                 <form method="post" asp-page-handler="DeletePicture" asp-route-id="@picture.Id">
                     <button type="submit" class="btn btn-danger">Delete</button>
                 </form>
                 <form method="post" enctype="multipart/form-data" asp-page-handler="UpdatePicture" asp-route-id="@picture.Id">
                     <label asp-for="@Model.ProfilePicture.Image" class="form-label"></label>
                     <input type="file" class="form-control" name="UploadedImage">
+                    <br>
                     <button type="submit" class="btn btn-primary">Update</button>
                 </form>
             </li>

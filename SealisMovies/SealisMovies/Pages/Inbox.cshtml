@@ -5,11 +5,28 @@
 @{
     var user = await UserManager.GetUserAsync(User);
 }
+<style>
+    .cardColor {
+        background-color: steelblue;
+        border-style: double;
+        border-width: 0.5em;
+        border-color: black;
+        color: black;
+    }
+    .textFrame
+    {
+        padding:1em;
+        border-width: 0.3em;
+        border-color: black;
+        border-style:double;
+    }
+</style>
 
 <div class="text-center">
     <h1 class="display-4">Inbox</h1>
-    <p>Inbox för privata koversationer!🎥🎞️</p>
+    <h5>Inbox för privata koversationer!🎥🎞️</h5>
 </div>
+<br />
 @if (Model.Messages != null)
 {
     <div>
@@ -17,18 +34,32 @@
         {
             if (user.UserName == message.ReceiverName)
             {
-                <p>Från: @message.SenderName</p>
-                <p>Titel: @message.Title</p>
-                <p>Text: @message.Text</p>
-                <p class="card-footer"><a asp-route-recieverid="@message.SenderId" asp-route-recievername="@message.SenderName" class="btn btn-warning">Svara</a></p>
-                <form method="post" asp-page-handler="Delete" asp-route-deleteid="@message.Id">
-                    <button type="submit" class="btn btn-danger">Ta bort</button>
-                </form>
+                <div class="cardColor message-div p-4">
+                    <h5><strong>Från: </strong>@message.SenderName</h5>
+                    <p><strong>Titel: </strong> @message.Title</p>
+                    <div class="textFrame"><p><strong>Text: </strong> @message.Text</p></div>
+                    <br>
+                    <div class="card-footer">
+                        <table>
+                            <tr>
+                                <td>
+                                    <p class="mt-3"><a asp-route-recieverid="@message.SenderId" asp-route-recievername="@message.SenderName" class="btn btn-warning">Svara</a></p>
+                                </td>
+                                <td>
+                                    <form method="post" asp-page-handler="Delete" asp-route-deleteid="@message.Id">
+                                        <button type="submit" class="btn btn-danger">Ta bort</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <br />
             }
         }
     </div>
 }
-@if(Model.Message != null)
+@if (Model.Message != null)
 {
     <form method="post" enctype="multipart/form-data">
 
