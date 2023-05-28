@@ -23,52 +23,55 @@ namespace SealisMovies.Pages
 
         [BindProperty]
         public Models.Category Category { get; set; }
-        public async Task<IActionResult> OnGetAsync()
+        public async Task<IActionResult> OnGetAsync(int editid, int deleteid)
         {
-            Categories = await _context.Categories.ToListAsync();
+            Categories = await DAL.CategoryManagerAPI.GetAllCategories();
             ReportedDiscussions = await _context.Discussions
                 .Where(d => d.Reported == true)
                 .ToListAsync();
+            if (editid != 0)
+            {
+                Category = await DAL.CategoryManagerAPI.GetCategory(editid);
+            }
+
+            if (deleteid != 0)
+            {
+                await DAL.CategoryManagerAPI.DeleteCategory(deleteid);
+                Categories = await DAL.CategoryManagerAPI.GetAllCategories();
+            }
+
             return Page();
         }
 
         public async Task<IActionResult> OnPostCreateCategoryAsync()
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                // Handle invalid form data
-                return Page();
+                await DAL.CategoryManagerAPI.SaveCategory(Category);
             }
-            // Add the category to the DbContext and save changes
-            _context.Add(Category);
-            await _context.SaveChangesAsync();
-
-            Categories = await _context.Categories.ToListAsync();
-
+            Categories = await DAL.CategoryManagerAPI.GetAllCategories();
             return RedirectToPage("/Admin");
         }
 
-        public async Task<IActionResult> OnPostRemoveCategoryAsync(int categoryId)
+        public async Task<IActionResult> OnPostRemoveCategoryAsync(int deleteid)
         {
-            var category = await _context.Categories.FindAsync(categoryId);
-            if (category != null)
+            if (deleteid != 0)
             {
-                _context.Categories.Remove(category);
-                await _context.SaveChangesAsync();
+                await DAL.CategoryManagerAPI.DeleteCategory(deleteid);
+                Categories = await DAL.CategoryManagerAPI.GetAllCategories();
             }
 
             return RedirectToPage("/Admin");
         }
 
-        public async Task<IActionResult> OnPostUpdateCategoryAsync(int categoryId, string newCategoryName)
+        public async Task<IActionResult> OnPostUpdateCategoryAsync(int editid)
         {
-            var category = await _context.Categories.FindAsync(categoryId);
-            if (category != null)
+            if (ModelState.IsValid)
             {
-                category.CategoryName = newCategoryName;
-                await _context.SaveChangesAsync();
+                Category = await DAL.CategoryManagerAPI.GetCategory(editid);
+                await DAL.CategoryManagerAPI.SaveCategory(Category);
             }
-
+            Categories = await DAL.CategoryManagerAPI.GetAllCategories();
             return RedirectToPage("/Admin");
         }
         public async Task<IActionResult> OnPostDeleteDiscussionAsync(int discussionId)

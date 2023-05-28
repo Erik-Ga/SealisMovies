@@ -5,20 +5,40 @@ namespace SealisMoviesApi.Data
 {
     public class CategoryManager
     {
+        public static List<Models.Category> Categories { get; set; }
+
         private readonly MyDBContext _context;
         public CategoryManager(MyDBContext context) 
         {
             _context = context;
         }
-        public async Task<List<Models.Category>> GetCategories()
+        public async Task<List<Models.Category>> GetAllCategories()
         {
+            if (Categories == null || !Categories.Any())
+            {
+                Categories = await _context.Category.ToListAsync();
+            }
+
+            return Categories;
+        }
+        public async Task<Models.Category> GetCategory(int id)
+        {
+            if (Categories == null || !Categories.Any())
+            {
+                Categories = await GetAllCategories();
+            }
 
 
-            List<Models.Category> categories = await _context.Category.ToListAsync();
+            var existingCate = Categories.Where(p => p.Id == id).SingleOrDefault();
 
-            Console.WriteLine("Nu är " + categories.Count + " kategorier hämtade.");
-
-            return categories;
+            if (existingCate != null)
+            {
+                return existingCate;
+            }
+            else
+            {
+                return null;
+            }
         }
         public async Task AddCategory(Category category)
         {
@@ -26,15 +46,28 @@ namespace SealisMoviesApi.Data
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteCategory(Category category)
+        public async Task DeleteCategory(int id)
         {
-            _context.Category.Remove(category);
-            await _context.SaveChangesAsync();
+            var category = await _context.Category.FindAsync(id);
+            if (category != null)
+            {
+                _context.Category.Remove(category);
+                await _context.SaveChangesAsync();
+            }
         }
-        public async Task UpdateCategory(Category category)
+        public async Task UpdateCategory(Category category, int id)
         {
-            _context.Category.Update(category);
-            await _context.SaveChangesAsync();
+            if (Categories is null)
+            {
+                await GetAllCategories();
+            }
+
+            var existingCate = Categories.Where(p => p.Id == id).SingleOrDefault();
+            if (existingCate != null)
+            {
+                existingCate.CategoryName = category.CategoryName;
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

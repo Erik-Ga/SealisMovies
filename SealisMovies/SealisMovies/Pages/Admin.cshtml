@@ -44,10 +44,11 @@
 }
 
 @*//Här kan admin skapa kategorier*@
-<form method="post" enctype="multipart/form-data">
+
+<form method="post" asp-page-handler="CreateCategory" enctype="multipart/form-data">
 
     <div class="form-group">
-
+        <input asp-for="Category.Id" type="hidden" />
         <label asp-for="Category.CategoryName" class="form-label">Kategori</label>
         <input asp-for="Category.CategoryName" class="form-control prefilled-text"
                value="@defaultText2"
@@ -61,7 +62,6 @@
 </form>
 
 <hr />
-
 @*//Här listas alla kategorier som sedan admin kan ta bort eller ändra på*@
 <h2>Categories</h2>
 <ul>
@@ -70,19 +70,19 @@
         <li class="categoryColor">
             @category.CategoryName
             <form method="post" asp-page-handler="RemoveCategory" class="d-inline">
-                <input type="hidden" name="categoryId" value="@category.Id" />
-                <input type="submit" class="btn btn-danger btn-sm" value="Remove" onclick="return confirm('Are you sure you want to remove this category?')" />
+                <input type="hidden" name="deleteid" value="@category.Id" />
+                <input type="submit" class="btn btn-danger btn-sm" value="Remove" onclick="return confirm('Är du säker på att du vill ta bort denna kategori?')" />
             </form>
             <p></p>
             <form method="post" asp-page-handler="UpdateCategory" class="d-inline ml-2">
-                <input type="hidden" name="categoryId" value="@category.Id" />
+                <input type="hidden" name="editid" value="@category.Id" />
 
                 <input style="color: darkgrey" type="text" name="newCategoryName" class="form-control form-control-sm d-inline prefilled-text"
                    value="@defaultText1"
                    onfocus="if (this.value === '@defaultText1') { this.value = ''; this.style.color = 'black'; }"
                    onblur="if (this.value === '') { this.value = '@defaultText1'; this.style.color = 'darkgrey'; }" />
                 <p></p>
-                <input type="submit" class="btn btn-primary btn-sm" value="Update" />
+                <input type="submit" class="btn btn-primary btn-sm" value="Uppdatera" />
             </form>
             <p></p>
         </li>

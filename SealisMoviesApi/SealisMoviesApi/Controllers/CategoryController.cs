@@ -6,7 +6,7 @@ namespace SealisMoviesApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoryController : Controller
+    public class CategoryController : ControllerBase
     {
         private readonly CategoryManager _categoryManager;
         public CategoryController(CategoryManager categoryManager) 
@@ -16,10 +16,18 @@ namespace SealisMoviesApi.Controllers
 
 
         [HttpGet]
-        public async Task <List<Models.Category>> Get() 
+        public async Task<List<Models.Category>> GetCategories() 
         {
-            var categories = await _categoryManager.GetCategories();
+            var categories = await _categoryManager.GetAllCategories();
             return categories;
+        }
+
+        [HttpGet("{id}")]
+        public async Task<Models.Category> Get(int id)
+        {
+            var product = await _categoryManager.GetCategory(id);
+
+            return product;
         }
 
         [HttpPost]
@@ -27,15 +35,15 @@ namespace SealisMoviesApi.Controllers
         {
             await _categoryManager.AddCategory(category);
         }
-        [HttpDelete]
-        public async Task Delete([FromBody] Models.Category category)
+        [HttpDelete("{id}")]
+        public async Task Delete(int id)
         {
-            await _categoryManager.DeleteCategory(category);
+            await _categoryManager.DeleteCategory(id);
         }
-        [HttpPut]
-        public async Task Put([FromBody] Models.Category category)
+        [HttpPut("{id}")]
+        public async Task Put(int id, [FromBody] Models.Category category)
         {
-            await _categoryManager.UpdateCategory(category);
+            await _categoryManager.UpdateCategory(category, id);
         }
     }
 }
