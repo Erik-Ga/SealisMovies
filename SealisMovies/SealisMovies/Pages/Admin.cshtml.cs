@@ -68,8 +68,10 @@ namespace SealisMovies.Pages
         {
             if (ModelState.IsValid)
             {
-                Category = await DAL.CategoryManagerAPI.GetCategory(editid);
-                await DAL.CategoryManagerAPI.SaveCategory(Category);
+                var x = Category;
+                var categoryOld = await DAL.CategoryManagerAPI.GetCategory(editid);
+                categoryOld.CategoryName = x.CategoryName;
+                await DAL.CategoryManagerAPI.SaveCategory(categoryOld);
             }
             Categories = await DAL.CategoryManagerAPI.GetAllCategories();
             return RedirectToPage("/Admin");

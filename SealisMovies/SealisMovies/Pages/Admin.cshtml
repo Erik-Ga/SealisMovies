@@ -48,7 +48,7 @@
 <form method="post" asp-page-handler="CreateCategory" enctype="multipart/form-data">
 
     <div class="form-group">
-        <input asp-for="Category.Id" type="hidden" />
+        <input asp-for="Category.Id" type="hidden" value="0"/>
         <label asp-for="Category.CategoryName" class="form-label">Kategori</label>
         <input asp-for="Category.CategoryName" class="form-control prefilled-text"
                value="@defaultText2"
@@ -77,8 +77,8 @@
             <form method="post" asp-page-handler="UpdateCategory" class="d-inline ml-2">
                 <input type="hidden" name="editid" value="@category.Id" />
 
-                <input style="color: darkgrey" type="text" name="newCategoryName" class="form-control form-control-sm d-inline prefilled-text"
-                   value="@defaultText1"
+                <input style="color: darkgrey" type="text" name="Category.CategoryName" class="form-control form-control-sm d-inline prefilled-text"
+                   
                    onfocus="if (this.value === '@defaultText1') { this.value = ''; this.style.color = 'black'; }"
                    onblur="if (this.value === '') { this.value = '@defaultText1'; this.style.color = 'darkgrey'; }" />
                 <p></p>

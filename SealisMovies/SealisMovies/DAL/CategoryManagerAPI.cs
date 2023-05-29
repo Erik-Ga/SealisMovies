@@ -4,7 +4,7 @@ namespace SealisMovies.DAL
 {
     public class CategoryManagerAPI
     {
-        private static Uri BaseAddress = new Uri("https://sealisapi.azurewebsites.net/");
+        private static Uri BaseAddress = new Uri("https://localhost:7136/");
 
         public static async Task<List<Models.Category>> GetAllCategories()
         {
@@ -50,16 +50,16 @@ namespace SealisMovies.DAL
         }
         public static async Task SaveCategory(Models.Category category)
         {
-            var cate = (await GetAllCategories()).Where(p => p.Id == category.Id).FirstOrDefault();
+            //var cate = (await GetAllCategories()).Where(p => p.Id == category.Id).FirstOrDefault();
 
-            if (cate != null)
+            if (category != null)
             {
                 using (var client = new HttpClient())
                 {
                     client.BaseAddress = BaseAddress;
                     var json = JsonSerializer.Serialize(category);
                     StringContent httpContent = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-                    HttpResponseMessage response = await client.PutAsync("API/Category/" + cate.Id, httpContent);
+                    HttpResponseMessage response = await client.PutAsync("API/Category/" + category.Id, httpContent);
 
                 }
             }

@@ -14,10 +14,10 @@ namespace SealisMoviesApi.Data
         }
         public async Task<List<Models.Category>> GetAllCategories()
         {
-            if (Categories == null || !Categories.Any())
-            {
+            //if (Categories == null || !Categories.Any())
+            //{
                 Categories = await _context.Category.ToListAsync();
-            }
+            //}
 
             return Categories;
         }
@@ -62,10 +62,8 @@ namespace SealisMoviesApi.Data
                 await GetAllCategories();
             }
 
-            var existingCate = Categories.Where(p => p.Id == id).SingleOrDefault();
-            if (existingCate != null)
+            if (category != null)
             {
-                existingCate.CategoryName = category.CategoryName;
                 await _context.SaveChangesAsync();
             }
         }
