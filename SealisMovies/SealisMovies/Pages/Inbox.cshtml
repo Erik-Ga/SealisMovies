@@ -5,22 +5,6 @@
 @{
     var user = await UserManager.GetUserAsync(User);
 }
-<style>
-    .cardColor {
-        background-color: steelblue;
-        border-style: double;
-        border-width: 0.5em;
-        border-color: black;
-        color: black;
-    }
-    .textFrame
-    {
-        padding:1em;
-        border-width: 0.3em;
-        border-color: black;
-        border-style:double;
-    }
-</style>
 
 <div class="text-center">
     <h1 class="display-4">Inbox</h1>
@@ -55,25 +39,28 @@
                     </div>
                 </div>
                 <br />
+                //Svara på meddelande
+                @if (Model.Message != null)
+                {
+                    <form method="post" enctype="multipart/form-data">
+
+                        <label asp-for="Message.Title" class="form-label"></label>
+                        <input asp-for="Message.Title" class="form-control" />
+
+                        <label asp-for="Message.Text" class="form-label"></label>
+                        <textarea asp-for="Message.Text" class="form-control" cols="40" rows="5"></textarea>
+
+                        <br>
+
+                        <input type="submit" class="btn btn-success" value="Skicka✉️">
+
+                    </form>
+                }
             }
+
         }
     </div>
 }
-@if (Model.Message != null)
-{
-    <form method="post" enctype="multipart/form-data">
 
-        <label asp-for="Message.Title" class="form-label"></label>
-        <input asp-for="Message.Title" class="form-control" />
-
-        <label asp-for="Message.Text" class="form-label"></label>
-        <textarea asp-for="Message.Text" class="form-control" cols="40" rows="5"></textarea>
-
-        <br>
-
-        <input type="submit" class="btn btn-success" value="Skicka✉️">
-
-    </form>
-}
 
 

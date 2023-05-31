@@ -85,6 +85,8 @@ namespace SealisMovies.Pages
         }
         public async Task<IActionResult> OnPostAsync(string recieverid, string recievername, int reportid, int discussionid)
         {
+            TempData["SuccessMessage"] = "Ditt meddelande har skickats!";
+
             if (reportid != 0)
             {
                 return await OnPostReportAsync(reportid);
@@ -128,7 +130,7 @@ namespace SealisMovies.Pages
             await _context.SaveChangesAsync();
 
 
-            return RedirectToPage("./Index");
+            return RedirectToPage();
         }
         public async Task<IActionResult> OnPostReportAsync(int reportid)
         {

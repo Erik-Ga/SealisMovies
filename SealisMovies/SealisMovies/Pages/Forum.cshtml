@@ -6,25 +6,10 @@
     ViewData["Title"] = "Home page";
     var user = await UserManager.GetUserAsync(User);
 }
-<style>
-    .cardColor {
-        background-color:steelblue;
-        border-style: double;
-        border-width: 1em;
-        border-color:black;
-        color: black;
-    }
-    .buttons
-    {
-        background-color: steelblue;
-        border-style: double;
-        border-width: 0.7em;
-    }
-</style>
 
 <div class="cardColor text-center">
-    <h1 class="display-4">Welcome To Sealis</h1>
-    <p>Här kan du diskutera allt om filmer!🎥🎞️</p>
+    <h1 class="display-4">Forum</h1>
+    <p>Börja skapa ett inlägg!🎥🎞️</p>
 </div>
 
 @*//Det som syns när man är inloggad*@
@@ -139,16 +124,20 @@
                         }
                     </div>
                     <p class="card-footer" style="font-weight: bold;">@Model.Discussion.Date </p>
-                    <p class="mx-3" style="font-weight: bold;">@Model.Discussion.UserName <img src="~/img/@Model.Discussion.ProfilePicture" alt="Profile Picture" width="50" height="50" /></p>
+                    <p class="cardColor p-1" style="font-weight: bold;">@Model.Discussion.UserName <img src="~/img/@Model.Discussion.ProfilePicture" alt="Profile Picture" width="50" height="50" /></p>
                     @if (Model.Comments != null)
                     {
-                        @foreach (var comment in Model.Comments.Where(m => m.DiscussionId == Model.Discussion.Id))
-                        {
-                            <p class="card-footer"></p>
-                            <p>@comment.Text</p>
-                            <p>@comment.UserName</p>
-                            <p>@comment.Date</p>
-                        }
+                        <div class="commentCol">
+                            @foreach (var comment in Model.Comments.Where(m => m.DiscussionId == Model.Discussion.Id))
+                            {
+                                <div class="commentColor">
+                                    <p class="card-footer"></p>
+                                    <p>@comment.Text</p>
+                                    <p><strong>@comment.UserName</strong></p>
+                                    <p><strong>@comment.Date</strong></p>
+                                </div>
+                            }
+                        </div>
                     }
 
                 </div>
