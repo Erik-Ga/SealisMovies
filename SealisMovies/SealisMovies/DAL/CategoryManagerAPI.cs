@@ -4,7 +4,7 @@ namespace SealisMovies.DAL
 {
     public class CategoryManagerAPI
     {
-        private static Uri BaseAddress = new Uri("https://localhost:7136/");
+        private static Uri BaseAddress = new Uri("https://sealisapi.azurewebsites.net/");
 
         public static async Task<List<Models.Category>> GetAllCategories()
         {

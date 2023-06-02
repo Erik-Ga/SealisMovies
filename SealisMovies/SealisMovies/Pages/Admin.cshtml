@@ -5,34 +5,6 @@
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
-<style>
-    .prefilled-text {
-        color: darkgrey;
-    }
-    .cardColor {
-        background-color: steelblue;
-        border-style: double;
-        border-width: 1em;
-        border-color: black;
-        color: black;
-    }
-
-    .categoryColor {
-        padding: 0.5em;
-        background-color: steelblue;
-        border-style: double;
-        border-width: 0.5em;
-        border-color: black;
-        color: black;
-    }
-
-    .buttons {
-        background-color: steelblue;
-        border-style: double;
-        border-width: 0.7em;
-    }
-</style>
-
 @{
     var user = await UserManager.GetUserAsync(User);
 }
@@ -67,11 +39,11 @@
 <ul>
     @foreach (var category in Model.Categories)
     {
-        <li class="categoryColor">
+        <li class="cardColor" style="list-style:none">
             @category.CategoryName
             <form method="post" asp-page-handler="RemoveCategory" class="d-inline">
                 <input type="hidden" name="deleteid" value="@category.Id" />
-                <input type="submit" class="btn btn-danger btn-sm" value="Remove" onclick="return confirm('Är du säker på att du vill ta bort denna kategori?')" />
+                <input type="submit" class="btn btn-danger btn-sm" value="Ta bort" onclick="return confirm('Är du säker på att du vill ta bort denna kategori?')" />
             </form>
             <p></p>
             <form method="post" asp-page-handler="UpdateCategory" class="d-inline ml-2">
