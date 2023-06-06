@@ -46,7 +46,7 @@
 
                     @foreach (var discussion in Model.Discussions)
                     {
-                        <div class="cardColor card m-2 p-2" style="width: 18rem">
+                        <div class="cardColor card m-2 p-2 text-center" style="width: 25rem">
                             <a asp-route-showid="@discussion.Id"><img class="card-img-top" src="~/img/@discussion.Image"></a>
                             <div class="card-body">
                                 <h5 class="card-title">Kategori: @discussion.Category</h5>

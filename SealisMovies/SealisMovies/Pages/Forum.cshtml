@@ -26,14 +26,14 @@
         @if (Model.Discussions != null)
         {
             @*Meddelande
-    En alert berättar att man inte kan skicka meddelande till sig själv*@
+            En alert berättar att man inte kan skicka meddelande till sig själv*@
             @if (Model.Message != null && Model.Message.ReceiverName == User.Identity.Name)
             {
                 <p class="alert alert-danger">Du kan inte skriva till dig själv!</p>
 
                 @foreach (var discussion in Model.Discussions)
                 {
-                    <div class="card m-2 p-2" style="width: 18rem">
+                    <div class="cardColor card m-2 p-2 text-center" style="width: 25rem">
                         <a asp-route-showid="@discussion.Id"><img class="card-img-top" src="~/img/@discussion.Image"></a>
                         <div class="card-body">
                             <h5 class="card-title">Kategori: @discussion.Category</h5>
@@ -82,7 +82,7 @@
                 }
             }
             @*Meddelande
-    Det som syns när man vill skicka meddelande till en användare*@
+            Det som syns när man vill skicka meddelande till en användare*@
             else if (Model.Message != null)
             {
                 <h3>Från: @Model.Message.SenderName</h3>

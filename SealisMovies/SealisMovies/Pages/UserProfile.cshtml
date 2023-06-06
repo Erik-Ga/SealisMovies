@@ -12,7 +12,7 @@
     <p>Välj din egen profilbild!🖼️</p>
 </div>
 <br />
-@*//Här kan användaren ladda upp en profilbild som sparas till databasen kopplat till inloggad användares id*@
+@*Här kan användaren ladda upp en profilbild som sparas till databasen kopplat till inloggad användares id*@
 @if (!Model.UserProfilePictures.Any(p => p.UserId == "bdaebc49-ef46-40cc-b578-0ad6bed05094"))
 {
     <h3>Lägg till en profilbild!</h3>
@@ -28,7 +28,7 @@
     </form>
 }
 <br />
-@*//Här visas nuvarande profilbild som användaren kan ta bort eller uppdatara genom att ladda upp och erstätta med ny profilbild*@
+@*Här visas nuvarande profilbild som användaren kan ta bort eller uppdatara genom att ladda upp och erstätta med ny profilbild*@
 @if (Model.UserProfilePictures != null && Model.UserProfilePictures.Any())
 {
     <h4>Nuvarande profilbild:</h4>

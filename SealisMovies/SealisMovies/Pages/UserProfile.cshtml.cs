@@ -65,14 +65,14 @@ namespace SealisMovies.Pages
                 return NotFound();
             }
 
-            // Delete the file from the wwwroot/img folder
+            // Radera filen från wwwroot/img mappen
             var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "img", picture.Image);
             if (System.IO.File.Exists(filePath))
             {
                 System.IO.File.Delete(filePath);
             }
 
-            // Remove the picture from the database
+            //Ta bort bilden från databasen
             _context.ProfilePicture.Remove(picture);
             await _context.SaveChangesAsync();
 
@@ -88,14 +88,14 @@ namespace SealisMovies.Pages
                 return NotFound();
             }
 
-            // Delete the existing file
+            //Radera nuvarande fil
             var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "img", picture.Image);
             if (System.IO.File.Exists(filePath))
             {
                 System.IO.File.Delete(filePath);
             }
 
-            // Upload and save the new profile picture
+            //Uppdatera och spara nya profilbilden
             if (UploadedImage != null)
             {
                 string fileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(UploadedImage.FileName);
