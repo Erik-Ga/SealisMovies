@@ -38,8 +38,8 @@
 
             @if (Model.Discussions != null)
             {
-                //Meddelande
-                //En alert berättar att man inte kan skicka meddelande till sig själv
+                @*Meddelande
+                En alert berättar att man inte kan skicka meddelande till sig själv*@
                 @if (Model.Message != null && Model.Message.ReceiverName == User.Identity.Name)
                 {
                     <p class="alert alert-danger">Du kan inte skriva till dig själv!</p>
@@ -67,8 +67,8 @@
                         </div>
                     }
                 }
-                //Meddelande
-                //Det som syns när man vill skicka meddelande till en användare
+                @*Meddelande
+                Det som syns när man vill skicka meddelande till en användare*@
                 else if (Model.Message != null)
                 {
                     <h3>Från: @Model.Message.SenderName</h3>
@@ -88,7 +88,7 @@
 
                     </form>
                 }
-                //Om man klickar in på ett specifikt inlägg
+                @*Om man klickar in på ett specifikt inlägg*@
                 else if (Model.Discussion != null)
                 {
                     <div class="cardColor card m-2" style="width: 30rem">
@@ -125,7 +125,7 @@
                     </div>
 
 
-                    //Kommentera inlägget
+                    @*Kommentera inlägget*@
                     @if (SignInManager.IsSignedIn(User))
                     {
                         <p></p>
@@ -145,7 +145,7 @@
                         </form>
                     }
                 }
-                //Annars visas alla inlägg
+                @*Annars visas alla inlägg*@
                 else
                 {
                     @foreach (var discussion in Model.Discussions)
@@ -175,15 +175,16 @@
             }
         </div>
     }
-    //Det som syns om man INTE är inloggad
+    @*Det som syns om man INTE är inloggad*@
     else
     {
-        //Centrering funkar inte???
-        <div class: row justify-content-center>
+        <div class="row justify-content-center">
             @if (Model.Discussion != null)
             {
+                <br />
                 <div class="alert alert-danger">Du är INTE inloggad!💔</div>
-                <div class="row justify-content-center text-center cardColor card m-2" style="width: 30rem">
+                <div class="alert alert-danger">Du måste logga in för att kunna kommentera inlägg!</div>
+                <div class="cardColor card m-2" style="width: 30rem">
                     <img class="card-img-top" src="~/img/@Model.Discussion.Image">
                     <div class="card-body">
                         <h5 class="card-title">Kategori: @Model.Discussion.Category</h5>
@@ -199,11 +200,12 @@
             }
             else
             {
+                <p></p>
                 <div class="alert alert-danger">Du är INTE inloggad!💔</div>
-                <div class="text-center row">
+                <div class="row">
                     @foreach (var discussion in Model.Discussions)
                     {
-                        <div class="cardColor card m-2 p-2" style="width: 18rem">
+                        <div class="cardColor card m-2 p-2" style="width: 25rem">
                             <a asp-route-showid="@discussion.Id"><img class="card-img-top" src="~/img/@discussion.Image"></a>
                             <div class="card-body">
                                 <h5 class="card-title">Kategori: @discussion.Category</h5>
@@ -221,6 +223,7 @@
                 </div>
             }
         </div>
+
     }
 </div>
 

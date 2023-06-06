@@ -34,7 +34,7 @@
 </form>
 
 <hr />
-@*//Här listas alla kategorier som sedan admin kan ta bort eller ändra på*@
+@*//Här listas alla kategorier som admin sedan kan ta bort eller ändra på*@
 <h2>Categories</h2>
 <ul>
     @foreach (var category in Model.Categories)
@@ -62,8 +62,13 @@
     }
 </ul>
 
+@*Här visas alla rapporterade inlägg, alternativt ett meddelande som säger att det inte finns några rapporterade inlägg*@
 <h1><u>Rapporterade inlägg</u></h1>
-@if (Model.ReportedDiscussions != null)
+@if(Model.ReportedDiscussions == null || !Model.ReportedDiscussions.Any())
+{
+    <div class="alert alert-success">Det finns inga rapporterade inlägg 😊</div>
+}
+else if (Model.ReportedDiscussions != null)
 {
     <div class="row justify-content-center">
         @foreach (var discussion in Model.ReportedDiscussions)
@@ -88,9 +93,5 @@
             </div>
         }
     </div>
-}
-@if(Model.ReportedDiscussions == null || !Model.ReportedDiscussions.Any())
-{
-    <div class="alert alert-success">Det finns inga rapporterade inlägg 😊</div>
 }
 
