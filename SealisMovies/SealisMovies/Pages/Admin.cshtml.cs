@@ -81,10 +81,11 @@ namespace SealisMovies.Pages
             var discussion = await _context.Discussions.FindAsync(discussionId);
             if (discussion != null)
             {
+                var comments = await _context.Comment.Where(c => c.DiscussionId == discussionId).ToListAsync();
+                _context.Comment.RemoveRange(comments);
                 _context.Discussions.Remove(discussion);
                 await _context.SaveChangesAsync();
             }
-
             return RedirectToPage("/Admin");
         }
         public async Task<IActionResult> OnPostRevertReportedStatusAsync(int discussionId)
